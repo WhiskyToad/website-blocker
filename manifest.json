@@ -1,0 +1,16 @@
+{
+	"manifest_version": 3,
+	"name": "My SvelteKit Extension",
+	"version": "1.0",
+	"description": "A SvelteKit-powered browser extension",
+	"permissions": ["storage", "tabs", "activeTab"],
+	"action": {
+		"default_popup": "index.html",
+		"default_icon": "icon.png"
+	},
+	"background": {
+		"service_worker": "background.ts"
+	},
+	"options_page": "index.html",
+	"host_permissions": ["*://*/*"]
+}
