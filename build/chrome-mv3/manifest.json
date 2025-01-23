@@ -1,0 +1,1 @@
+{"manifest_version":3,"name":"wxt-react-starter","description":"manifest.json description","version":"0.0.0","background":{"service_worker":"background.js"},"options_ui":{"page":"options.html"}}

@@ -5,4 +5,5 @@ export default defineConfig({
   extensionApi: 'chrome',
   modules: ['@wxt-dev/module-react'],
   srcDir: 'src',
+  outDir: 'build'
 });

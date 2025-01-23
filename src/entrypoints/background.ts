@@ -28,6 +28,9 @@ export interface ISchedule {
 
 export const redirectExtensionPath = '/blocked.html'
 
+export default defineBackground(() => {
+})
+
 function getBlockChromeRule(
   id: number,
   domain: string
@@ -150,3 +153,4 @@ export async function removeCategory(categoryID: string): Promise<void> {
   const updatedCategories = categories.filter((cat) => cat.id !== categoryID);
   await chrome.storage.local.set({ categories: updatedCategories });
 }
+
