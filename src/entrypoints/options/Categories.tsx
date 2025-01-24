@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   getCategories,
   addCategory,
@@ -6,19 +6,19 @@ import {
   type ICategory,
   type ISchedule,
   DaysOfTheWeek,
-} from "../background";
-import { v4 as uuid } from "uuid";
+} from '../background';
+import { v4 as uuid } from 'uuid';
 
 const CategoryManager: React.FC = () => {
   const [categories, setCategories] = useState<ICategory[]>([]);
-  const [newCategoryName, setNewCategoryName] = useState<string>("");
+  const [newCategoryName, setNewCategoryName] = useState<string>('');
   const [newCategorySchedule, setNewCategorySchedule] = useState<ISchedule>({
     days: [],
-    startTime: "",
-    endTime: "",
+    startTime: '',
+    endTime: '',
   });
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
-  const [newDomain, setNewDomain] = useState<string>("");
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [newDomain, setNewDomain] = useState<string>('');
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -31,7 +31,7 @@ const CategoryManager: React.FC = () => {
 
   const handleAddCategory = async () => {
     if (!newCategoryName.trim()) {
-      alert("Category name is required.");
+      alert('Category name is required.');
       return;
     }
 
@@ -44,8 +44,8 @@ const CategoryManager: React.FC = () => {
     await addCategory(newCategory);
     const updatedCategories = await getCategories();
     setCategories(updatedCategories);
-    setNewCategoryName("");
-    setNewCategorySchedule({ days: [], startTime: "", endTime: "" });
+    setNewCategoryName('');
+    setNewCategorySchedule({ days: [], startTime: '', endTime: '' });
   };
 
   const handleRemoveCategory = async (categoryName: string) => {
@@ -56,18 +56,18 @@ const CategoryManager: React.FC = () => {
 
   const handleAddDomainToCategory = async () => {
     if (!selectedCategory) {
-      alert("Please select a category.");
+      alert('Please select a category.');
       return;
     }
     if (!newDomain.trim()) {
-      alert("Domain name is required.");
+      alert('Domain name is required.');
       return;
     }
 
     // await addSiteToCategory(newDomain, selectedCategory);
     const updatedCategories = await getCategories();
     setCategories(updatedCategories);
-    setNewDomain("");
+    setNewDomain('');
   };
 
   //   const handleRemoveDomainFromCategory = async (
@@ -80,11 +80,11 @@ const CategoryManager: React.FC = () => {
   //   };
 
   return (
-    <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
+    <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
       <h1>Category Manager</h1>
 
       {/* Add Category */}
-      <div style={{ marginBottom: "20px" }}>
+      <div style={{ marginBottom: '20px' }}>
         <h2>Add New Category</h2>
         <input
           type="text"
@@ -92,10 +92,10 @@ const CategoryManager: React.FC = () => {
           value={newCategoryName}
           onChange={(e) => setNewCategoryName(e.target.value)}
           style={{
-            padding: "10px",
-            fontSize: "16px",
-            width: "300px",
-            marginRight: "10px",
+            padding: '10px',
+            fontSize: '16px',
+            width: '300px',
+            marginRight: '10px',
           }}
         />
         <input
@@ -108,9 +108,9 @@ const CategoryManager: React.FC = () => {
             })
           }
           style={{
-            padding: "10px",
-            fontSize: "16px",
-            marginRight: "10px",
+            padding: '10px',
+            fontSize: '16px',
+            marginRight: '10px',
           }}
         />
         <input
@@ -123,9 +123,9 @@ const CategoryManager: React.FC = () => {
             })
           }
           style={{
-            padding: "10px",
-            fontSize: "16px",
-            marginRight: "10px",
+            padding: '10px',
+            fontSize: '16px',
+            marginRight: '10px',
           }}
         />
         <select
@@ -141,9 +141,9 @@ const CategoryManager: React.FC = () => {
             })
           }
           style={{
-            padding: "10px",
-            fontSize: "16px",
-            marginRight: "10px",
+            padding: '10px',
+            fontSize: '16px',
+            marginRight: '10px',
           }}
         >
           {Object.keys(DaysOfTheWeek).map((day) => (
@@ -155,13 +155,13 @@ const CategoryManager: React.FC = () => {
         <button
           onClick={handleAddCategory}
           style={{
-            padding: "10px",
-            fontSize: "16px",
-            backgroundColor: "#007bff",
-            color: "#fff",
-            border: "none",
-            borderRadius: "4px",
-            cursor: "pointer",
+            padding: '10px',
+            fontSize: '16px',
+            backgroundColor: '#007bff',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
           }}
         >
           Add Category
@@ -172,11 +172,11 @@ const CategoryManager: React.FC = () => {
       <h2>Categories</h2>
       <ul>
         {categories.map((category) => (
-          <li key={category.name} style={{ marginBottom: "20px" }}>
+          <li key={category.name} style={{ marginBottom: '20px' }}>
             <strong>{category.name}</strong>
             {category.schedule && (
               <p>
-                Active on: {category.schedule.days.join(", ")} from{" "}
+                Active on: {category.schedule.days.join(', ')} from{' '}
                 {category.schedule.startTime} to {category.schedule.endTime}
               </p>
             )}
@@ -206,13 +206,13 @@ const CategoryManager: React.FC = () => {
             <button
               onClick={() => handleRemoveCategory(category.id)}
               style={{
-                marginTop: "10px",
-                padding: "5px 10px",
-                backgroundColor: "#dc3545",
-                color: "#fff",
-                border: "none",
-                borderRadius: "4px",
-                cursor: "pointer",
+                marginTop: '10px',
+                padding: '5px 10px',
+                backgroundColor: '#dc3545',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
               }}
             >
               Delete Category
@@ -222,15 +222,15 @@ const CategoryManager: React.FC = () => {
       </ul>
 
       {/* Add Domain to Category */}
-      <div style={{ marginTop: "20px" }}>
+      <div style={{ marginTop: '20px' }}>
         <h2>Add Domain to Category</h2>
         <select
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
           style={{
-            padding: "10px",
-            fontSize: "16px",
-            marginRight: "10px",
+            padding: '10px',
+            fontSize: '16px',
+            marginRight: '10px',
           }}
         >
           <option value="">Select Category</option>
@@ -246,22 +246,22 @@ const CategoryManager: React.FC = () => {
           value={newDomain}
           onChange={(e) => setNewDomain(e.target.value)}
           style={{
-            padding: "10px",
-            fontSize: "16px",
-            width: "300px",
-            marginRight: "10px",
+            padding: '10px',
+            fontSize: '16px',
+            width: '300px',
+            marginRight: '10px',
           }}
         />
         <button
           onClick={handleAddDomainToCategory}
           style={{
-            padding: "10px",
-            fontSize: "16px",
-            backgroundColor: "#007bff",
-            color: "#fff",
-            border: "none",
-            borderRadius: "4px",
-            cursor: "pointer",
+            padding: '10px',
+            fontSize: '16px',
+            backgroundColor: '#007bff',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
           }}
         >
           Add Domain

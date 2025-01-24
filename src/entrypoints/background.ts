@@ -1,13 +1,13 @@
 export interface IBlockedSite {
-  id: number
-  domain: string
-  actionType: chrome.declarativeNetRequest.RuleActionType
+  id: number;
+  domain: string;
+  actionType: chrome.declarativeNetRequest.RuleActionType;
 }
 
 export interface ICategory {
   name: string;
   schedule?: ISchedule;
-  id: string
+  id: string;
 }
 
 export const DaysOfTheWeek = {
@@ -18,7 +18,7 @@ export const DaysOfTheWeek = {
   Friday: 'Friday',
   Saturday: 'Saturday',
   Sunday: 'Sunday',
-} as const
+} as const;
 
 export interface ISchedule {
   days: (keyof typeof DaysOfTheWeek)[];
@@ -26,10 +26,9 @@ export interface ISchedule {
   endTime: string;
 }
 
-export const redirectExtensionPath = '/blocked.html'
+export const redirectExtensionPath = '/blocked.html';
 
-export default defineBackground(() => {
-})
+export default defineBackground(() => {});
 
 function getBlockChromeRule(
   id: number,
@@ -47,68 +46,70 @@ function getBlockChromeRule(
       urlFilter: `||${domain}`,
       resourceTypes: [chrome.declarativeNetRequest.ResourceType.MAIN_FRAME],
     },
-  }
+  };
 }
 
 export async function addBlockedSite(domain: string): Promise<void> {
-  const existingBlockedSites = await filterBlockedSitesByDomain(domain)
-  const blockedSiteId = await getNextBlockedSiteIndex()
+  const existingBlockedSites = await filterBlockedSitesByDomain(domain);
+  const blockedSiteId = await getNextBlockedSiteIndex();
   await chrome.declarativeNetRequest.updateDynamicRules({
     addRules: [getBlockChromeRule(blockedSiteId, domain)],
     removeRuleIds: existingBlockedSites.map((site) => site.id),
-  })
+  });
 }
 
 export async function batchAddBlockedSites(domains: string[]) {
-  const allBlockedSites = await getBlockedSites()
+  const allBlockedSites = await getBlockedSites();
   const existingSites = allBlockedSites.filter((blockedSite) =>
     domains.includes(blockedSite.domain)
-  )
+  );
   await chrome.declarativeNetRequest.updateDynamicRules({
     addRules: [],
     removeRuleIds: existingSites.map((site) => site.id),
-  })
-  const nextBlockedSiteId = await getNextBlockedSiteIndex()
+  });
+  const nextBlockedSiteId = await getNextBlockedSiteIndex();
   await chrome.declarativeNetRequest.updateDynamicRules({
     addRules: domains.map((domain, index) => {
-      return getBlockChromeRule(nextBlockedSiteId + index, domain)
+      return getBlockChromeRule(nextBlockedSiteId + index, domain);
     }),
-  })
+  });
 }
 
 export async function getNextBlockedSiteIndex(): Promise<number> {
-  const blockedSites = await getBlockedSites()
+  const blockedSites = await getBlockedSites();
   if (!blockedSites.length) {
-    return 1
+    return 1;
   }
-  const lastBlockedSite = blockedSites.sort((a, b) => a.id - b.id)[blockedSites.length - 1]
-  return lastBlockedSite.id + 1
+  const lastBlockedSite = blockedSites.sort((a, b) => a.id - b.id)[
+    blockedSites.length - 1
+  ];
+  return lastBlockedSite.id + 1;
 }
 
 export async function filterBlockedSitesByDomain(
   domain: string
 ): Promise<IBlockedSite[]> {
   if (!domain.trim()) {
-    return []
+    return [];
   }
-  const blockedSites = await getBlockedSites()
-  return blockedSites.filter((site) => site.domain === domain)
+  const blockedSites = await getBlockedSites();
+  return blockedSites.filter((site) => site.domain === domain);
 }
 
 export async function removeBlockedSite(domain: string): Promise<void> {
-  const existingSites = await filterBlockedSitesByDomain(domain)
+  const existingSites = await filterBlockedSitesByDomain(domain);
 
   if (!existingSites) {
-    return
+    return;
   }
   await chrome.declarativeNetRequest.updateDynamicRules({
     removeRuleIds: existingSites.map((site) => site.id),
-  })
+  });
 }
 
 export async function getBlockedSites(): Promise<IBlockedSite[]> {
-  const rules = await chrome.declarativeNetRequest.getDynamicRules()
-  return rules.map(transformChromeRuleToIBlockedSite)
+  const rules = await chrome.declarativeNetRequest.getDynamicRules();
+  return rules.map(transformChromeRuleToIBlockedSite);
 }
 
 export function transformChromeRuleToIBlockedSite(
@@ -121,7 +122,7 @@ export function transformChromeRuleToIBlockedSite(
       rule.condition.urlFilter?.replace('||', '') ??
       '',
     actionType: rule.action.type,
-  }
+  };
 }
 
 /**
@@ -135,11 +136,13 @@ export async function addCategory(category: ICategory): Promise<void> {
 }
 
 export async function getCategories(): Promise<ICategory[]> {
-  const { categories } = await chrome.storage.local.get("categories");
+  const { categories } = await chrome.storage.local.get('categories');
   return categories || [];
 }
 
-export async function updateCategory(updatedCategory: ICategory): Promise<void> {
+export async function updateCategory(
+  updatedCategory: ICategory
+): Promise<void> {
   const categories = await getCategories();
   const index = categories.findIndex((cat) => cat.id === updatedCategory.id);
   if (index !== -1) {
@@ -153,4 +156,3 @@ export async function removeCategory(categoryID: string): Promise<void> {
   const updatedCategories = categories.filter((cat) => cat.id !== categoryID);
   await chrome.storage.local.set({ categories: updatedCategories });
 }
-
