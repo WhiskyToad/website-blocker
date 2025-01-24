@@ -14,7 +14,8 @@
     "compile": "tsc --noEmit",
     "postinstall": "wxt prepare",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "new-story": "node scripts/generateStory.js"
   },
   "dependencies": {
     "daisyui": "^4.12.23",
