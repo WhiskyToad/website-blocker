@@ -1,6 +1,7 @@
 import React from 'react';
 
 import CategoryManager from './Categories';
+import CategoryHeader from '@/components/CategoryHeader/CategoryHeader';
 
 const Options: React.FC = () => {
   // const [inputValue, setInputValue] = useState<string>("");
@@ -34,7 +35,7 @@ const Options: React.FC = () => {
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
       <h1>Manage Blocked Sites</h1>
-      <CategoryManager />
+      <CategoryHeader categoryName="test" description="dsfdsaf" />
     </div>
   );
 };

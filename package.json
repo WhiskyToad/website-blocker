@@ -21,6 +21,7 @@
     "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,json,css,scss,md}'"
   },
   "dependencies": {
+    "@tailwindcss/vite": "^4.0.0",
     "daisyui": "^4.12.23",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
@@ -42,7 +43,6 @@
     "@typescript-eslint/eslint-plugin": "^8.21.0",
     "@typescript-eslint/parser": "^8.21.0",
     "@wxt-dev/module-react": "^1.1.2",
-    "autoprefixer": "^10.4.20",
     "eslint": "^9.18.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-import": "^2.31.0",
@@ -51,7 +51,6 @@
     "eslint-plugin-react": "^7.37.4",
     "eslint-plugin-react-hooks": "^5.1.0",
     "globals": "^15.14.0",
-    "postcss": "^8.5.1",
     "prettier": "^3.4.2",
     "storybook": "^8.5.1",
     "tailwindcss": "^4.0.0",
