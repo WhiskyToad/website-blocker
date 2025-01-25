@@ -21,13 +21,8 @@
     "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,json,css,scss,md}'"
   },
   "dependencies": {
-    "@tailwindcss/postcss": "^4.0.0",
-    "@tailwindcss/vite": "^4.0.0",
-    "daisyui": "^4.12.23",
-    "postcss": "^8.5.1",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "tailwindcss": "^4.0.0"
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^3.2.4",
@@ -40,6 +35,8 @@
     "@storybook/react": "^8.5.1",
     "@storybook/react-vite": "^8.5.1",
     "@storybook/test": "^8.5.1",
+    "@tailwindcss/postcss": "^4.0.0",
+    "@tailwindcss/vite": "^4.0.0",
     "@types/chrome": "^0.0.280",
     "@types/react": "^19.0.1",
     "@types/react-dom": "^19.0.2",
@@ -58,6 +55,10 @@
     "storybook": "^8.5.1",
     "typescript": "^5.6.3",
     "typescript-eslint": "^8.21.0",
-    "wxt": "^0.19.13"
+    "wxt": "^0.19.13",
+    "autoprefixer": "^10",
+    "daisyui": "^4",
+    "postcss": "^8",
+    "tailwindcss": "^3"
   }
 }
