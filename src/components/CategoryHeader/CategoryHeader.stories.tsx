@@ -8,6 +8,13 @@ const meta: Meta<typeof CategoryHeader> = {
   parameters: {
     layout: 'centered',
   },
+  decorators: [
+    (Story) => (
+      <div style={{ width: '800px' }}>
+        <Story />
+      </div>
+    ),
+  ],
 };
 
 export default meta;
