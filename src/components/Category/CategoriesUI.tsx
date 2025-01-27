@@ -13,19 +13,25 @@ export interface CategoryProps {
 
 const Category = ({ categories }: CategoryProps) => {
   return (
-    <div className="p4 space-y-4">
-      <div className="flex flex-row justify-between items-center">
-        <h2 className="text-3xl text-center px-4">Categories</h2>
-        <button className="btn btn-secondary">
+    <div className="p-6 space-y-6 bg-base-100 rounded-lg shadow-md">
+      {/* Header Section */}
+      <div className="flex justify-between items-center border-b pb-4">
+        <h2 className="text-2xl font-bold">Categories</h2>
+        <button
+          aria-label="Add new category"
+          className="btn btn-primary flex items-center space-x-2"
+        >
           <FaPlus />
-          Add Category
+          <span>Add Category</span>
         </button>
       </div>
-      <div className="">
+
+      {/* Category List */}
+      <div className="space-y-6">
         {categories.map((category, index) => (
           <div
             key={index}
-            className="mb-4 p-4 space-y-4 bg-base-200 rounded-box"
+            className="p-4 space-y-4 bg-neutral text-neutral-content rounded-lg shadow-lg"
           >
             <CategoryHeader {...category.categoryHeaderData} />
             <CategorySiteList {...category.categorySiteListData} />

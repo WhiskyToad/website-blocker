@@ -1,8 +1,8 @@
 import { Meta, StoryObj } from '@storybook/react';
-import Category, { type CategoryProps } from './Category';
+import Category, { type CategoryProps } from './CategoriesUI';
 
 const meta: Meta<typeof Category> = {
-  title: 'components/Category',
+  title: 'components/CategoriesUI',
   component: Category,
   tags: ['autodocs'],
   parameters: {

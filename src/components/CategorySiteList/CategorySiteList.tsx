@@ -6,22 +6,32 @@ export interface CategorySiteListProps {
 
 const CategorySiteList = ({ blockedSites }: CategorySiteListProps) => {
   return (
-    <div className="collapse collapse-arrow">
-      <input type="radio" name="my-accordion-3" />
-      <div className="collapse-title text-xl font-medium">Blocked Websites</div>
-      <div className="collapse-content">
-        {blockedSites.map((site, index) => (
-          <div
-            key={index}
-            className="flex flex-row items-center justify-between p-2 border-b border-base-300"
-          >
-            <div>{site}</div>
-            <button className="btn btn-error btn-outline btn-small">
-              <IoMdRemoveCircleOutline size={16} />
-              Remove
-            </button>
-          </div>
-        ))}
+    <div className="collapse collapse-arrow bg-neutral text-neutral-content rounded-lg shadow-md">
+      <input type="checkbox" className="peer" />
+      <div className="collapse-title text-lg font-bold flex items-center justify-between">
+        <span>Blocked Websites</span>
+        <span className="badge badge-secondary">{blockedSites.length}</span>
+      </div>
+      <div className="collapse-content space-y-2">
+        {blockedSites.length > 0 ? (
+          blockedSites.map((site, index) => (
+            <div
+              key={index}
+              className="flex items-center justify-between p-2 bg-base-100 rounded-lg shadow-sm"
+            >
+              <span className="text-sm truncate">{site}</span>
+              <button
+                aria-label={`Remove ${site}`}
+                className="btn btn-error btn-sm flex items-center space-x-1"
+              >
+                <IoMdRemoveCircleOutline size={16} />
+                <span>Remove</span>
+              </button>
+            </div>
+          ))
+        ) : (
+          <p className="text-sm text-gray-400">No sites blocked yet.</p>
+        )}
       </div>
     </div>
   );
