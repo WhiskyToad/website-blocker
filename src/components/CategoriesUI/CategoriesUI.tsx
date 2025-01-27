@@ -11,7 +11,7 @@ export interface CategoryProps {
   }[];
 }
 
-const Category = ({ categories }: CategoryProps) => {
+const CategoriesUI = ({ categories }: CategoryProps) => {
   return (
     <div className="p-6 space-y-6 bg-base-100 rounded-lg shadow-md">
       {/* Header Section */}
@@ -42,4 +42,4 @@ const Category = ({ categories }: CategoryProps) => {
   );
 };
 
-export default Category;
+export default CategoriesUI;
