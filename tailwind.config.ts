@@ -3,15 +3,15 @@ export default {
     themes: [
       {
         mytheme: {
-          primary: '#2563eb',
+          primary: '#3b82f6',
           secondary: '#f97316',
-          accent: '#10b981',
+          accent: '#f59e0b',
           neutral: '#f3f4f6',
           'base-100': '#ffffff',
           info: '#3b82f6',
-          success: '#16a34a',
+          success: '#10b981',
           warning: '#facc15',
-          error: '#dc2626',
+          error: '#f87171',
         },
       },
     ],

@@ -6,9 +6,9 @@ export interface BaseToggleProps {
 
 const BaseToggle = ({ checked, label, onClick }: BaseToggleProps) => {
   return (
-    <div className="form-control w-52">
+    <div className="form-control">
       <label className="label cursor-pointer">
-        <span className="label-text">{label}</span>
+        <span className="label-text pr-2">{label}</span>
         <input
           type="checkbox"
           className="toggle toggle-primary"
