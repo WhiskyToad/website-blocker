@@ -1,4 +1,4 @@
-import { MdOutlineTimer } from 'react-icons/md';
+import { MdOutlineTimer, MdOutlineDeleteOutline } from 'react-icons/md';
 import { FaPlus, FaRegEdit } from 'react-icons/fa';
 
 export interface CategoryHeaderProps {
@@ -8,7 +8,7 @@ export interface CategoryHeaderProps {
 
 const CategoryHeader = ({ categoryName, description }: CategoryHeaderProps) => {
   return (
-    <div className="p-4 bg-neutral text-neutral-content rounded-lg shadow-lg">
+    <div className="p-4 bg-neutral text-neutral-content rounded-lg">
       <div className="flex justify-between items-center mb-2">
         {/* Category Title and Edit Button */}
         <div className="flex items-center space-x-2">
@@ -18,6 +18,12 @@ const CategoryHeader = ({ categoryName, description }: CategoryHeaderProps) => {
             className="btn btn-circle btn-sm btn-ghost"
           >
             <FaRegEdit size={16} />
+          </button>
+          <button
+            aria-label={`Delete ${categoryName}`}
+            className="btn btn-circle btn-sm btn-ghost"
+          >
+            <MdOutlineDeleteOutline size={16} />
           </button>
         </div>
 
