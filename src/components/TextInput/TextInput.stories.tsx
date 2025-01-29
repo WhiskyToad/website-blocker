@@ -18,6 +18,7 @@ const defaultProps: TextInputProps = {
   value: '',
   onChange: () => {},
   required: false,
+  label: 'Label',
 };
 
 export const Default: Story = {
