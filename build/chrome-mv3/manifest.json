@@ -1,1 +1,0 @@
-{"manifest_version":3,"name":"Block it out","description":"manifest.json description","version":"0.0.0","permissions":["declarativeNetRequest","storage","activeTab"],"host_permissions":["<all_urls>"],"background":{"service_worker":"background.js"},"action":{"default_title":"Extension Popup","default_popup":"popup.html"},"options_ui":{"open_in_tab":true,"page":"options.html"}}
