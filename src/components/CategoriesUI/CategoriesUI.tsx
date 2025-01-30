@@ -1,14 +1,10 @@
-import type { CategoryHeaderProps } from '../CategoryHeader/CategoryHeader';
+import type { ICategory } from '@/utils/categories';
 import CategoryHeader from '../CategoryHeader/CategoryHeader';
-import type { CategorySiteListProps } from '../CategorySiteList/CategorySiteList';
 import CategorySiteList from '../CategorySiteList/CategorySiteList';
 import { FaPlus } from 'react-icons/fa';
 
 export interface CategoryProps {
-  categories: {
-    categoryHeaderData: CategoryHeaderProps;
-    categorySiteListData: CategorySiteListProps;
-  }[];
+  categories: ICategory[];
   onAddCategory: () => void;
 }
 
@@ -30,13 +26,16 @@ const CategoriesUI = ({ categories, onAddCategory }: CategoryProps) => {
 
       {/* Category List */}
       <div className="space-y-6">
-        {categories.map((category, index) => (
+        {categories.map((category) => (
           <div
-            key={index}
+            key={category.id}
             className="p-4 space-y-4 bg-neutral text-neutral-content rounded-lg shadow-lg"
           >
-            <CategoryHeader {...category.categoryHeaderData} />
-            <CategorySiteList {...category.categorySiteListData} />
+            <CategoryHeader
+              categoryName={category.categoryName}
+              description={category.categoryDescription ?? ''}
+            />
+            <CategorySiteList blockedSites={[]} />
           </div>
         ))}
       </div>

@@ -23,22 +23,14 @@ type Story = StoryObj<typeof Category>;
 const defaultProps: CategoryProps = {
   categories: [
     {
-      categoryHeaderData: {
-        categoryName: 'Social Media',
-        description: 'Block social media sites to stay focused',
-      },
-      categorySiteListData: {
-        blockedSites: ['facebook.com', 'twitter.com', 'instagram.com'],
-      },
+      categoryName: 'Category 1',
+      categoryDescription: 'Category 1 description',
+      id: '1',
     },
     {
-      categoryHeaderData: {
-        categoryName: 'Entertainment',
-        description: 'Block entertainment sites to avoid distractions',
-      },
-      categorySiteListData: {
-        blockedSites: ['youtube.com', 'netflix.com', 'hulu.com'],
-      },
+      categoryName: 'Category 2',
+      categoryDescription: 'Category 2 description',
+      id: '2',
     },
   ],
   onAddCategory: () => {},

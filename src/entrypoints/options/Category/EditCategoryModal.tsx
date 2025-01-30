@@ -1,9 +1,11 @@
 import EditCategoryModalUI, {
   type EditCategoryModalFormValues,
 } from '@/components/EditCategoryModalUI/EditCategoryModalUI';
+import { addCategory } from '@/utils/categories';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { v4 as uuidv4 } from 'uuid';
 
 interface EditCategoryModalWrapperProps {
   isOpen: boolean;
@@ -38,7 +40,11 @@ const EditCategoryModal = ({
     errors[field]?.message;
 
   const onSubmit = (data: EditCategoryModalFormValues) => {
-    console.log(data);
+    addCategory({
+      categoryName: data.categoryName,
+      categoryDescription: data.description,
+      id: uuidv4(),
+    });
     onClose();
   };
 

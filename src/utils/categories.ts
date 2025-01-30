@@ -1,5 +1,6 @@
 export interface ICategory {
-    name: string;
+    categoryName: string;
+    categoryDescription?: string;
     schedule?: ISchedule;
     id: string;
   }

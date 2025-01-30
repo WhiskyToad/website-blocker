@@ -1,11 +1,11 @@
 import { Meta, StoryObj } from '@storybook/react';
-import EditCategoryModal, {
+import EditCategoryModaUIl, {
   type EditCategoryModalProps,
 } from './EditCategoryModalUI';
 
-const meta: Meta<typeof EditCategoryModal> = {
-  title: 'components/EditCategoryModal',
-  component: EditCategoryModal,
+const meta: Meta<typeof EditCategoryModaUIl> = {
+  title: 'components/EditCategoryModaUIl',
+  component: EditCategoryModaUIl,
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
@@ -13,7 +13,7 @@ const meta: Meta<typeof EditCategoryModal> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof EditCategoryModal>;
+type Story = StoryObj<typeof EditCategoryModaUIl>;
 
 const defaultProps: EditCategoryModalProps = {
   isOpen: true,
