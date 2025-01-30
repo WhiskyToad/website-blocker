@@ -50,12 +50,14 @@ const EditCategoryModal = ({
         id: categoryToEdit.id,
         categoryName: data.categoryName,
         categoryDescription: data.description,
+        isEnabled: categoryToEdit.isEnabled,
       });
     } else {
       await addCategory({
         categoryName: data.categoryName,
         categoryDescription: data.description,
         id: uuidv4(),
+        isEnabled: true,
       });
     }
     onClose();

@@ -6,16 +6,20 @@ export interface CategoryHeaderProps {
   categoryName: string;
   description: string;
   categoryId: string;
+  isEnabled: boolean;
   onDeleteCategory: (id: string) => void;
   onEditCategory: (id: string) => void;
+  toggleEnabled: (id: string) => void;
 }
 
 const CategoryHeader = ({
   categoryName,
   description,
+  isEnabled,
   onDeleteCategory,
   categoryId,
   onEditCategory,
+  toggleEnabled,
 }: CategoryHeaderProps) => {
   return (
     <div className="p-4 bg-neutral text-neutral-content rounded-lg">
@@ -28,7 +32,11 @@ const CategoryHeader = ({
 
         {/* Toggle and Actions */}
         <div className="flex items-center space-x-4">
-          <BaseToggle checked={true} label="Enabled" onClick={() => {}} />
+          <BaseToggle
+            checked={isEnabled}
+            label="Enabled"
+            onClick={() => toggleEnabled(categoryId)}
+          />
           <button
             aria-label={`Edit ${categoryName}`}
             className="btn btn-circle btn-sm btn-ghost"

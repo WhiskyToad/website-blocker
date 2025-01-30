@@ -8,6 +8,7 @@ export interface CategoryProps {
   onAddCategory: () => void;
   onDeleteCategory: (id: string) => void;
   onEditCategory: (id: string) => void;
+  toggleEnabled: (id: string) => void;
 }
 
 const CategoriesUI = ({
@@ -15,6 +16,7 @@ const CategoriesUI = ({
   onAddCategory,
   onDeleteCategory,
   onEditCategory,
+  toggleEnabled,
 }: CategoryProps) => {
   return (
     <div className="p-6 space-y-6 bg-base-100 rounded-lg shadow-md">
@@ -44,6 +46,8 @@ const CategoriesUI = ({
               categoryId={category.id}
               onDeleteCategory={onDeleteCategory}
               onEditCategory={onEditCategory}
+              toggleEnabled={toggleEnabled}
+              isEnabled={category.isEnabled}
             />
             <CategorySiteList blockedSites={[]} />
           </div>

@@ -3,6 +3,7 @@ export interface ICategory {
     categoryDescription?: string;
     schedule?: ISchedule;
     id: string;
+    isEnabled: boolean;
   }
   
   export interface ISchedule {

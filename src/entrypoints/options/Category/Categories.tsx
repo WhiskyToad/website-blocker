@@ -1,7 +1,12 @@
 import CategoriesUI from '@/components/CategoriesUI/CategoriesUI';
 import useModal from '@/entrypoints/hooks/useModal';
 import EditCategoryModal from './EditCategoryModal';
-import { deleteCategory, getCategories, ICategory } from '@/utils/categories';
+import {
+  deleteCategory,
+  editCategory,
+  getCategories,
+  ICategory,
+} from '@/utils/categories';
 import { useCallback, useEffect, useState } from 'react';
 
 const Categories = () => {
@@ -42,6 +47,14 @@ const Categories = () => {
     fetchCategories();
   };
 
+  const handleToggleEnabled = async (id: string) => {
+    const category = categories.find((category) => category.id === id);
+    if (category) {
+      category.isEnabled = !category.isEnabled;
+      await editCategory(category);
+      fetchCategories();
+    }
+  };
   return (
     <>
       <EditCategoryModal
@@ -54,6 +67,7 @@ const Categories = () => {
         onAddCategory={openEditCategoryModal}
         onDeleteCategory={handleDeleteCategory}
         onEditCategory={handleEditCategory}
+        toggleEnabled={handleToggleEnabled}
       />
     </>
   );
