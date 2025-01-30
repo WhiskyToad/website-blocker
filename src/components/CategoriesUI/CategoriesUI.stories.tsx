@@ -41,6 +41,7 @@ const defaultProps: CategoryProps = {
       },
     },
   ],
+  onAddCategory: () => {},
 };
 
 export const Default: Story = {

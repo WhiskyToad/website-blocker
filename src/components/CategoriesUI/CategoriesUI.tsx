@@ -9,9 +9,10 @@ export interface CategoryProps {
     categoryHeaderData: CategoryHeaderProps;
     categorySiteListData: CategorySiteListProps;
   }[];
+  onAddCategory: () => void;
 }
 
-const CategoriesUI = ({ categories }: CategoryProps) => {
+const CategoriesUI = ({ categories, onAddCategory }: CategoryProps) => {
   return (
     <div className="p-6 space-y-6 bg-base-100 rounded-lg shadow-md">
       {/* Header Section */}
@@ -20,6 +21,7 @@ const CategoriesUI = ({ categories }: CategoryProps) => {
         <button
           aria-label="Add new category"
           className="btn btn-primary flex items-center space-x-2"
+          onClick={onAddCategory}
         >
           <FaPlus />
           <span>Add Category</span>
