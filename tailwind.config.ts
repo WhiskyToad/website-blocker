@@ -1,4 +1,8 @@
-export default {
+module.exports = {
+  content: ['./src/**/*.{html,js,jsx,ts,tsx}'], // Ensure it covers all your file extensions
+  theme: {
+    extend: {},
+  },
   daisyui: {
     themes: [
       {
@@ -16,6 +20,5 @@ export default {
       },
     ],
   },
-  content: ['./src/**/*.html', './src/**/*.tsx'],
   plugins: [require('daisyui')],
 };

@@ -1,9 +1,11 @@
 import Categories from './Category/Categories';
+import '../../styles.css';
+import './Options.module.css';
 
 const Options: React.FC = () => {
   return (
-    <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-      <h1>Manage Blocked Sites</h1>
+    <div className="p-5 font-sans">
+      <h1 className="text-2xl font-bold mb-4">Manage Blocked Sites</h1>
       <Categories />
     </div>
   );
