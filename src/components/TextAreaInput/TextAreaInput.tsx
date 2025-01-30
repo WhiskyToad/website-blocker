@@ -4,6 +4,7 @@ export interface TextAreaInputProps {
   onChange: (value: string) => void;
   required?: boolean;
   label: string;
+  error?: string;
 }
 
 const TextAreaInput = ({
@@ -12,19 +13,25 @@ const TextAreaInput = ({
   onChange,
   required = false,
   label,
+  error,
 }: TextAreaInputProps) => {
   return (
     <div className="flex flex-col space-y-2">
       <label className="flex flex-col">
-        <span className="label-text text-sm font-medium mb-1">{label}</span>
+        <span>
+          {label} {required && <span className="text-red-500">*</span>}
+        </span>
         <textarea
-          className="textarea textarea-bordered w-full max-w-xs resize-none focus:ring-2 focus:ring-primary focus:outline-none p-2"
+          className={`textarea textarea-bordered w-full max-w-xs resize-none focus:ring-2 focus:outline-none p-2 ${
+            error ? 'border-red-500 focus:ring-red-500' : 'focus:ring-primary'
+          }`}
           placeholder={placeholder}
           value={value}
           required={required}
           onChange={(e) => onChange(e.target.value)}
         />
       </label>
+      {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
     </div>
   );
 };

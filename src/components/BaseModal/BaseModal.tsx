@@ -5,6 +5,7 @@ export interface BaseModalProps {
   onClose: () => void;
   submitText?: string;
   onSubmit?: () => void;
+  submitButtonType?: 'button' | 'submit';
 }
 const BaseModal = ({
   title,
@@ -13,6 +14,7 @@ const BaseModal = ({
   onClose,
   submitText,
   onSubmit,
+  submitButtonType = 'button',
 }: BaseModalProps) => {
   if (!isOpen) return null;
 
@@ -25,7 +27,11 @@ const BaseModal = ({
           <button className="btn" onClick={onClose}>
             Close
           </button>
-          <button className="btn btn-primary" onClick={onSubmit}>
+          <button
+            type={submitButtonType}
+            className="btn btn-primary"
+            onClick={onSubmit}
+          >
             {submitText}
           </button>
         </div>

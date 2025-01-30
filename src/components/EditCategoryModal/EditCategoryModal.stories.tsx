@@ -19,10 +19,12 @@ const defaultProps: EditCategoryModalProps = {
   isOpen: true,
   onClose: () => {},
   onSubmit: () => {},
-  categoryName: '',
-  description: '',
-  onCategoryNameChange: () => {},
-  onDescriptionChange: () => {},
+  onChange: () => {},
+  getErrors: () => undefined,
+  formValues: {
+    categoryName: '',
+    description: '',
+  },
   submitText: 'Save Changes',
 };
 
