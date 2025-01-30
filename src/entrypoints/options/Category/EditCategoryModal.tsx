@@ -1,6 +1,6 @@
-import EditCategoryModal, {
+import EditCategoryModalUI, {
   type EditCategoryModalFormValues,
-} from '@/components/EditCategoryModal/EditCategoryModal';
+} from '@/components/EditCategoryModalUI/EditCategoryModalUI';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -19,7 +19,7 @@ const editCategorySchema = z.object({
     .optional(),
 });
 
-const EditCategoryModalWrapper = ({
+const EditCategoryModal = ({
   isOpen,
   onClose,
   initialValues = { categoryName: '', description: '' },
@@ -43,7 +43,7 @@ const EditCategoryModalWrapper = ({
   };
 
   return (
-    <EditCategoryModal
+    <EditCategoryModalUI
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit(onSubmit)}
@@ -55,4 +55,4 @@ const EditCategoryModalWrapper = ({
   );
 };
 
-export default EditCategoryModalWrapper;
+export default EditCategoryModal;

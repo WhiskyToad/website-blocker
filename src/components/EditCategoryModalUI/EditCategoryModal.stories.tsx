@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from '@storybook/react';
 import EditCategoryModal, {
   type EditCategoryModalProps,
-} from './EditCategoryModal';
+} from './EditCategoryModalUI';
 
 const meta: Meta<typeof EditCategoryModal> = {
   title: 'components/EditCategoryModal',

@@ -1,6 +1,6 @@
 import CategoriesUI from '@/components/CategoriesUI/CategoriesUI';
 import useModal from '@/entrypoints/hooks/useModal';
-import EditCategoryModalWrapper from './EditCategoryModalWrapper';
+import EditCategoryModal from './EditCategoryModal';
 
 const Categories = () => {
   const {
@@ -10,7 +10,7 @@ const Categories = () => {
   } = useModal();
   return (
     <>
-      <EditCategoryModalWrapper
+      <EditCategoryModal
         isOpen={showEditCategoryModal}
         onClose={closeEditCategoryModal}
       />
