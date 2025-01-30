@@ -2,7 +2,7 @@ import CategoriesUI from '@/components/CategoriesUI/CategoriesUI';
 import useModal from '@/entrypoints/hooks/useModal';
 import EditCategoryModal from './EditCategoryModal';
 import { getCategories, ICategory } from '@/utils/categories';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 const Categories = () => {
   const {
@@ -13,19 +13,23 @@ const Categories = () => {
 
   const [categories, setCategories] = useState<ICategory[]>([]);
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      const result = await getCategories();
-      setCategories(result);
-    };
-
-    fetchCategories();
+  const fetchCategories = useCallback(async () => {
+    const result = await getCategories();
+    setCategories(result);
   }, []);
+
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
+
   return (
     <>
       <EditCategoryModal
         isOpen={showEditCategoryModal}
-        onClose={closeEditCategoryModal}
+        onClose={() => {
+          closeEditCategoryModal();
+          fetchCategories();
+        }}
       />
       <CategoriesUI
         categories={categories}

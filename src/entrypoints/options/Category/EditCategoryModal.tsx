@@ -39,8 +39,8 @@ const EditCategoryModal = ({
   const getErrors = (field: keyof EditCategoryModalFormValues) =>
     errors[field]?.message;
 
-  const onSubmit = (data: EditCategoryModalFormValues) => {
-    addCategory({
+  const onSubmit = async (data: EditCategoryModalFormValues) => {
+    await addCategory({
       categoryName: data.categoryName,
       categoryDescription: data.description,
       id: uuidv4(),
