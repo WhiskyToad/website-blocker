@@ -10,7 +10,7 @@ export interface EditCategoryModalFormValues {
 export interface EditCategoryModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: () => void;
+  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   onChange: (field: keyof EditCategoryModalFormValues, value: string) => void;
   getErrors: (field: keyof EditCategoryModalFormValues) => string | undefined;
   formValues: EditCategoryModalFormValues;
