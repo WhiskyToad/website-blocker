@@ -7,6 +7,7 @@ export interface CategoryHeaderProps {
   description: string;
   categoryId: string;
   onDeleteCategory: (id: string) => void;
+  onEditCategory: (id: string) => void;
 }
 
 const CategoryHeader = ({
@@ -14,6 +15,7 @@ const CategoryHeader = ({
   description,
   onDeleteCategory,
   categoryId,
+  onEditCategory,
 }: CategoryHeaderProps) => {
   return (
     <div className="p-4 bg-neutral text-neutral-content rounded-lg">
@@ -30,6 +32,7 @@ const CategoryHeader = ({
           <button
             aria-label={`Edit ${categoryName}`}
             className="btn btn-circle btn-sm btn-ghost"
+            onClick={() => onEditCategory(categoryId)}
           >
             <FaRegEdit size={16} />
           </button>

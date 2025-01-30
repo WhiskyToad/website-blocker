@@ -7,12 +7,14 @@ export interface CategoryProps {
   categories: ICategory[];
   onAddCategory: () => void;
   onDeleteCategory: (id: string) => void;
+  onEditCategory: (id: string) => void;
 }
 
 const CategoriesUI = ({
   categories,
   onAddCategory,
   onDeleteCategory,
+  onEditCategory,
 }: CategoryProps) => {
   return (
     <div className="p-6 space-y-6 bg-base-100 rounded-lg shadow-md">
@@ -41,6 +43,7 @@ const CategoriesUI = ({
               description={category.categoryDescription ?? ''}
               categoryId={category.id}
               onDeleteCategory={onDeleteCategory}
+              onEditCategory={onEditCategory}
             />
             <CategorySiteList blockedSites={[]} />
           </div>

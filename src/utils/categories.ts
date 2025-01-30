@@ -31,10 +31,26 @@ export interface ICategory {
     }
   }
 
+  export async function editCategory(category: ICategory): Promise<void> {
+    try {
+      const categories = await getCategories();
+      const updatedCategories = categories.map((cat) => {
+        if (cat.id === category.id) {
+          return category;
+        }
+        return cat;
+      });
+      await chrome.storage.local.set({ categories: updatedCategories });
+    } catch (error) {
+      console.error('Failed to edit category:', error);
+    }
+  }
+
   export async function deleteCategory(id: string): Promise<void> {
     try {
       const categories = await getCategories();
       const updatedCategories = categories.filter((category) => category.id !== id);
+      //TODO - make sure this also will delete the sites
       await chrome.storage.local.set({ categories: updatedCategories });
     } catch (error) {
       console.error('Failed to delete category:', error);

@@ -1,7 +1,7 @@
 import EditCategoryModalUI, {
   type EditCategoryModalFormValues,
 } from '@/components/EditCategoryModalUI/EditCategoryModalUI';
-import { addCategory } from '@/utils/categories';
+import { addCategory, editCategory, type ICategory } from '@/utils/categories';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -10,7 +10,7 @@ import { v4 as uuidv4 } from 'uuid';
 interface EditCategoryModalWrapperProps {
   isOpen: boolean;
   onClose: () => void;
-  initialValues?: EditCategoryModalFormValues;
+  categoryToEdit: ICategory | null;
 }
 
 const editCategorySchema = z.object({
@@ -24,8 +24,12 @@ const editCategorySchema = z.object({
 const EditCategoryModal = ({
   isOpen,
   onClose,
-  initialValues = { categoryName: '', description: '' },
+  categoryToEdit,
 }: EditCategoryModalWrapperProps) => {
+  const initialValues = {
+    categoryName: categoryToEdit?.categoryName ?? '',
+    description: categoryToEdit?.categoryDescription ?? '',
+  };
   const {
     handleSubmit,
     watch,
@@ -33,6 +37,7 @@ const EditCategoryModal = ({
     formState: { errors },
   } = useForm<EditCategoryModalFormValues>({
     defaultValues: initialValues,
+    values: initialValues,
     resolver: zodResolver(editCategorySchema),
   });
 
@@ -40,11 +45,19 @@ const EditCategoryModal = ({
     errors[field]?.message;
 
   const onSubmit = async (data: EditCategoryModalFormValues) => {
-    await addCategory({
-      categoryName: data.categoryName,
-      categoryDescription: data.description,
-      id: uuidv4(),
-    });
+    if (categoryToEdit) {
+      await editCategory({
+        id: categoryToEdit.id,
+        categoryName: data.categoryName,
+        categoryDescription: data.description,
+      });
+    } else {
+      await addCategory({
+        categoryName: data.categoryName,
+        categoryDescription: data.description,
+        id: uuidv4(),
+      });
+    }
     onClose();
   };
 

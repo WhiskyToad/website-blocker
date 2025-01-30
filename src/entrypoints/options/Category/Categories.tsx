@@ -12,34 +12,48 @@ const Categories = () => {
   } = useModal();
 
   const [categories, setCategories] = useState<ICategory[]>([]);
+  const [categoryToEdit, setCategoryToEdit] = useState<ICategory | null>(null);
 
   const fetchCategories = useCallback(async () => {
     const result = await getCategories();
     setCategories(result);
   }, []);
 
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
+
+  //TODO - confirm modal
   const handleDeleteCategory = async (id: string) => {
     await deleteCategory(id);
     fetchCategories();
   };
 
-  useEffect(() => {
+  const handleEditCategory = (id: string) => {
+    setCategoryToEdit(
+      categories.find((category) => category.id === id) || null
+    );
+    openEditCategoryModal();
+  };
+
+  const handleCloseEditCategoryModal = () => {
+    closeEditCategoryModal();
+    setCategoryToEdit(null);
     fetchCategories();
-  }, [fetchCategories]);
+  };
 
   return (
     <>
       <EditCategoryModal
         isOpen={showEditCategoryModal}
-        onClose={() => {
-          closeEditCategoryModal();
-          fetchCategories();
-        }}
+        categoryToEdit={categoryToEdit}
+        onClose={handleCloseEditCategoryModal}
       />
       <CategoriesUI
         categories={categories}
         onAddCategory={openEditCategoryModal}
         onDeleteCategory={handleDeleteCategory}
+        onEditCategory={handleEditCategory}
       />
     </>
   );
