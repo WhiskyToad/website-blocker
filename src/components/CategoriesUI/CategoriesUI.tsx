@@ -6,9 +6,14 @@ import { FaPlus } from 'react-icons/fa';
 export interface CategoryProps {
   categories: ICategory[];
   onAddCategory: () => void;
+  onDeleteCategory: (id: string) => void;
 }
 
-const CategoriesUI = ({ categories, onAddCategory }: CategoryProps) => {
+const CategoriesUI = ({
+  categories,
+  onAddCategory,
+  onDeleteCategory,
+}: CategoryProps) => {
   return (
     <div className="p-6 space-y-6 bg-base-100 rounded-lg shadow-md">
       {/* Header Section */}
@@ -34,6 +39,8 @@ const CategoriesUI = ({ categories, onAddCategory }: CategoryProps) => {
             <CategoryHeader
               categoryName={category.categoryName}
               description={category.categoryDescription ?? ''}
+              categoryId={category.id}
+              onDeleteCategory={onDeleteCategory}
             />
             <CategorySiteList blockedSites={[]} />
           </div>

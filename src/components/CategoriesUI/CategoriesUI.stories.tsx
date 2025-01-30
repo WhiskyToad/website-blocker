@@ -33,6 +33,7 @@ const defaultProps: CategoryProps = {
       id: '2',
     },
   ],
+  onDeleteCategory: () => {},
   onAddCategory: () => {},
 };
 

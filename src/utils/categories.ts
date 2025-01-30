@@ -30,6 +30,16 @@ export interface ICategory {
       console.error('Failed to add category:', error);
     }
   }
+
+  export async function deleteCategory(id: string): Promise<void> {
+    try {
+      const categories = await getCategories();
+      const updatedCategories = categories.filter((category) => category.id !== id);
+      await chrome.storage.local.set({ categories: updatedCategories });
+    } catch (error) {
+      console.error('Failed to delete category:', error);
+    }
+  }
   
   export async function getCategories(): Promise<ICategory[]> {
     try {

@@ -1,7 +1,7 @@
 import CategoriesUI from '@/components/CategoriesUI/CategoriesUI';
 import useModal from '@/entrypoints/hooks/useModal';
 import EditCategoryModal from './EditCategoryModal';
-import { getCategories, ICategory } from '@/utils/categories';
+import { deleteCategory, getCategories, ICategory } from '@/utils/categories';
 import { useCallback, useEffect, useState } from 'react';
 
 const Categories = () => {
@@ -17,6 +17,11 @@ const Categories = () => {
     const result = await getCategories();
     setCategories(result);
   }, []);
+
+  const handleDeleteCategory = async (id: string) => {
+    await deleteCategory(id);
+    fetchCategories();
+  };
 
   useEffect(() => {
     fetchCategories();
@@ -34,6 +39,7 @@ const Categories = () => {
       <CategoriesUI
         categories={categories}
         onAddCategory={openEditCategoryModal}
+        onDeleteCategory={handleDeleteCategory}
       />
     </>
   );

@@ -5,9 +5,16 @@ import BaseToggle from '../BaseToggle/BaseToggle';
 export interface CategoryHeaderProps {
   categoryName: string;
   description: string;
+  categoryId: string;
+  onDeleteCategory: (id: string) => void;
 }
 
-const CategoryHeader = ({ categoryName, description }: CategoryHeaderProps) => {
+const CategoryHeader = ({
+  categoryName,
+  description,
+  onDeleteCategory,
+  categoryId,
+}: CategoryHeaderProps) => {
   return (
     <div className="p-4 bg-neutral text-neutral-content rounded-lg">
       <div className="flex justify-between items-center mb-3">
@@ -28,6 +35,7 @@ const CategoryHeader = ({ categoryName, description }: CategoryHeaderProps) => {
           </button>
           <button
             aria-label={`Delete ${categoryName}`}
+            onClick={() => onDeleteCategory(categoryId)}
             className="btn btn-circle btn-sm btn-ghost"
           >
             <MdOutlineDeleteOutline size={16} />

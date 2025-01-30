@@ -23,6 +23,8 @@ type Story = StoryObj<typeof CategoryHeader>;
 const defaultProps: CategoryHeaderProps = {
   categoryName: 'Category Name',
   description: 'Description of the category',
+  categoryId: '1',
+  onDeleteCategory: () => {},
 };
 
 export const Default: Story = {
