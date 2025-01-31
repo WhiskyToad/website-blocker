@@ -51,6 +51,7 @@ const EditCategoryModal = ({
         categoryName: data.categoryName,
         categoryDescription: data.description,
         isEnabled: categoryToEdit.isEnabled,
+        domains: categoryToEdit.domains,
       });
     } else {
       await addCategory({
@@ -58,6 +59,7 @@ const EditCategoryModal = ({
         categoryDescription: data.description,
         id: uuidv4(),
         isEnabled: true,
+        domains: [],
       });
     }
     onClose();
