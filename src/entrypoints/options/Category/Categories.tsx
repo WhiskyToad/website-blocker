@@ -90,6 +90,7 @@ const Categories = () => {
         onEditCategory={handleEditCategory}
         toggleEnabled={handleToggleEnabled}
         onAddDomain={handleShowAddDomainModal}
+        onRemoveSite={() => {}}
       />
     </>
   );

@@ -5,6 +5,8 @@ export interface BaseModalProps {
   onClose: () => void;
   submitText?: string;
   submitButtonType?: 'button' | 'submit';
+  submitButtonColor?: string;
+  onSubmit?: () => void;
 }
 
 const BaseModal = ({
@@ -14,6 +16,8 @@ const BaseModal = ({
   onClose,
   submitText,
   submitButtonType = 'button',
+  submitButtonColor = 'primary',
+  onSubmit,
 }: BaseModalProps) => {
   if (!isOpen) return null;
 
@@ -31,7 +35,8 @@ const BaseModal = ({
           </button>
           <button
             type={submitButtonType}
-            className="btn btn-primary hover:bg-blue-600"
+            onClick={onSubmit}
+            className={`btn btn-${submitButtonColor} hover:bg-blue-600`}
           >
             {submitText}
           </button>

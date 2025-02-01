@@ -2,9 +2,13 @@ import { IoMdRemoveCircleOutline } from 'react-icons/io';
 
 export interface CategorySiteListProps {
   blockedSites: string[];
+  onRemoveSite: (site: string) => void;
 }
 
-const CategorySiteList = ({ blockedSites }: CategorySiteListProps) => {
+const CategorySiteList = ({
+  blockedSites,
+  onRemoveSite,
+}: CategorySiteListProps) => {
   return (
     <div className="collapse collapse-arrow bg-neutral text-neutral-content rounded-lg shadow-md">
       <input type="checkbox" className="peer" />
@@ -23,6 +27,7 @@ const CategorySiteList = ({ blockedSites }: CategorySiteListProps) => {
               <button
                 aria-label={`Remove ${site}`}
                 className="btn btn-error btn-sm flex items-center space-x-1"
+                onClick={() => onRemoveSite(site)}
               >
                 <IoMdRemoveCircleOutline size={16} />
                 <span>Remove</span>
