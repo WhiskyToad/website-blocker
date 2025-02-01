@@ -9,6 +9,7 @@ import {
 } from '@/utils/categories';
 import { useCallback, useEffect, useState } from 'react';
 import AddDomainModal from './AddDomainModal';
+import ConfirmDeleteModalUI from '@/components/ConfirmDeleteModalUI/ConfirmDeleteModalUI';
 
 const Categories = () => {
   const {
@@ -21,9 +22,17 @@ const Categories = () => {
     openModal: openAddDomainModal,
     closeModal: closeAddDomainModal,
   } = useModal();
+  const {
+    visible: showConfirmDeleteModal,
+    openModal: openConfirmDeleteModal,
+    closeModal: closeConfirmDeleteModal,
+  } = useModal();
 
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [categoryToEdit, setCategoryToEdit] = useState<ICategory | null>(null);
+  const [confirmDeleteModalCallback, setConfirmDeleteModalCallback] = useState<
+    () => void
+  >(() => {});
 
   const fetchCategories = useCallback(async () => {
     const result = await getCategories();
@@ -34,10 +43,29 @@ const Categories = () => {
     fetchCategories();
   }, [fetchCategories]);
 
-  //TODO - confirm modal
   const handleDeleteCategory = async (id: string) => {
-    await deleteCategory(id);
-    fetchCategories();
+    setConfirmDeleteModalCallback(() => async () => {
+      await deleteCategory(id);
+      handleCloseModals();
+    });
+    openConfirmDeleteModal();
+  };
+
+  const handleRemoveSite = (categoryId: string, domainToDelete: string) => {
+    const category = categories.find((category) => category.id === categoryId);
+    if (category) {
+      const removeDomainCallback = async () => {
+        await editCategory({
+          ...category,
+          domains: category.domains.filter(
+            (domain) => domain !== domainToDelete
+          ),
+        });
+        handleCloseModals();
+      };
+      setConfirmDeleteModalCallback(() => removeDomainCallback);
+      openConfirmDeleteModal();
+    }
   };
 
   const handleEditCategory = (id: string) => {
@@ -50,6 +78,8 @@ const Categories = () => {
   const handleCloseModals = () => {
     closeEditCategoryModal();
     closeAddDomainModal();
+    closeConfirmDeleteModal();
+    setConfirmDeleteModalCallback(() => {});
     setCategoryToEdit(null);
     fetchCategories();
   };
@@ -83,6 +113,11 @@ const Categories = () => {
           onClose={handleCloseModals}
         />
       )}
+      <ConfirmDeleteModalUI
+        isOpen={showConfirmDeleteModal}
+        onClose={handleCloseModals}
+        onConfirm={confirmDeleteModalCallback}
+      />
       <CategoriesUI
         categories={categories}
         onAddCategory={openEditCategoryModal}
@@ -90,7 +125,7 @@ const Categories = () => {
         onEditCategory={handleEditCategory}
         toggleEnabled={handleToggleEnabled}
         onAddDomain={handleShowAddDomainModal}
-        onRemoveSite={() => {}}
+        onRemoveSite={handleRemoveSite}
       />
     </>
   );
