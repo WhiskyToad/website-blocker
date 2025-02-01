@@ -25,6 +25,10 @@ const defaultProps: CategoryHeaderProps = {
   description: 'Description of the category',
   categoryId: '1',
   onDeleteCategory: () => {},
+  onEditCategory: () => {},
+  toggleEnabled: () => {},
+  isEnabled: true,
+  onAddDomain: () => {},
 };
 
 export const Default: Story = {

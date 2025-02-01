@@ -8,12 +8,18 @@ import {
   ICategory,
 } from '@/utils/categories';
 import { useCallback, useEffect, useState } from 'react';
+import AddDomainModal from './AddDomainModal';
 
 const Categories = () => {
   const {
     visible: showEditCategoryModal,
     openModal: openEditCategoryModal,
     closeModal: closeEditCategoryModal,
+  } = useModal();
+  const {
+    visible: showAddDomainModal,
+    openModal: openAddDomainModal,
+    closeModal: closeAddDomainModal,
   } = useModal();
 
   const [categories, setCategories] = useState<ICategory[]>([]);
@@ -41,8 +47,9 @@ const Categories = () => {
     openEditCategoryModal();
   };
 
-  const handleCloseEditCategoryModal = () => {
+  const handleCloseModals = () => {
     closeEditCategoryModal();
+    closeAddDomainModal();
     setCategoryToEdit(null);
     fetchCategories();
   };
@@ -55,19 +62,34 @@ const Categories = () => {
       fetchCategories();
     }
   };
+
+  const handleShowAddDomainModal = (id: string) => {
+    setCategoryToEdit(
+      categories.find((category) => category.id === id) || null
+    );
+    openAddDomainModal();
+  };
   return (
     <>
       <EditCategoryModal
         isOpen={showEditCategoryModal}
         categoryToEdit={categoryToEdit}
-        onClose={handleCloseEditCategoryModal}
+        onClose={handleCloseModals}
       />
+      {categoryToEdit && (
+        <AddDomainModal
+          isOpen={showAddDomainModal}
+          category={categoryToEdit}
+          onClose={handleCloseModals}
+        />
+      )}
       <CategoriesUI
         categories={categories}
         onAddCategory={openEditCategoryModal}
         onDeleteCategory={handleDeleteCategory}
         onEditCategory={handleEditCategory}
         toggleEnabled={handleToggleEnabled}
+        onAddDomain={handleShowAddDomainModal}
       />
     </>
   );

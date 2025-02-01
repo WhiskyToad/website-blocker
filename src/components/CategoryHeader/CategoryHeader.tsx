@@ -10,6 +10,7 @@ export interface CategoryHeaderProps {
   onDeleteCategory: (id: string) => void;
   onEditCategory: (id: string) => void;
   toggleEnabled: (id: string) => void;
+  onAddDomain: (id: string) => void;
 }
 
 const CategoryHeader = ({
@@ -20,6 +21,7 @@ const CategoryHeader = ({
   categoryId,
   onEditCategory,
   toggleEnabled,
+  onAddDomain,
 }: CategoryHeaderProps) => {
   return (
     <div className="p-4 bg-neutral text-neutral-content rounded-lg">
@@ -59,6 +61,7 @@ const CategoryHeader = ({
         <button
           className="btn btn-primary btn-sm flex items-center space-x-2"
           aria-label={`Add a site to ${categoryName}`}
+          onClick={() => onAddDomain(categoryId)}
         >
           <FaPlus size={16} />
           <span>Add Site</span>
