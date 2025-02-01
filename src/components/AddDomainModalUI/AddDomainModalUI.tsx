@@ -30,7 +30,7 @@ const AddDomainModalUI = ({
     >
       <div className="space-y-4">
         <TextInput
-          placeholder="Add new domain"
+          placeholder="Add a domain in form of example.com"
           value={formValues.domainName}
           onChange={(value) => onChange('domainName', value)}
           required

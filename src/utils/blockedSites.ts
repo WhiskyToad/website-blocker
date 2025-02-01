@@ -21,7 +21,7 @@ function getBlockChromeRule(
       redirect: { extensionPath: redirectExtensionPath },
     },
     condition: {
-      urlFilter: `||${domain}`,
+      urlFilter: domain,
       resourceTypes: [chrome.declarativeNetRequest.ResourceType.MAIN_FRAME],
     },
   };

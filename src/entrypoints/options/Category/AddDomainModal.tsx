@@ -13,8 +13,13 @@ interface AddDomainModalPropsProps {
   category: ICategory;
 }
 
-const editCategorySchema = z.object({
-  domainName: z.string().min(1, 'Domain name is required'),
+const domainRegex =
+  /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/[a-zA-Z0-9-._~%!$&'()*+,;=:@/]*)?$/;
+const addDomainValidation = z.object({
+  domainName: z
+    .string()
+    .min(1, 'Domain name is required')
+    .regex(domainRegex, 'Invalid domain format (e.g., example.com)'),
 });
 
 const AddDomainModal = ({
@@ -34,14 +39,18 @@ const AddDomainModal = ({
   } = useForm<AddDomainModalFormValues>({
     defaultValues: initialValues,
     values: initialValues,
-    resolver: zodResolver(editCategorySchema),
+    resolver: zodResolver(addDomainValidation),
   });
 
   const getErrors = (field: keyof AddDomainModalFormValues) =>
     errors[field]?.message;
 
+  const cleanDomainInput = (input: string) => {
+    return input.replace(/^(https?:\/\/)?(www\.)?/, '').toLowerCase();
+  };
   const onSubmit = async (data: AddDomainModalFormValues) => {
-    if (category.domains.includes(data.domainName)) {
+    const cleanDomain = cleanDomainInput(data.domainName);
+    if (category.domains.includes(cleanDomain)) {
       setError('domainName', {
         type: 'manual',
         message: 'Domain already exists in this category',
@@ -50,7 +59,7 @@ const AddDomainModal = ({
     }
     await editCategory({
       ...category,
-      domains: [...category.domains, data.domainName],
+      domains: [...category.domains, cleanDomain],
     });
 
     onClose();
