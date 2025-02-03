@@ -6,11 +6,6 @@ import { IoMdRemoveCircleOutline } from 'react-icons/io';
 export interface CreateScheduleUIProps {
   onAddInterval: () => void;
   onRemoveInterval: (index: number) => void;
-  onSetSchedule: (schedule: {
-    timeIntervals: { start: string; end: string }[];
-    selectedDays: (typeof DaysOfTheWeek)[];
-  }) => void;
-  onRemoveSchedule: () => void;
 }
 
 export const TIME_OPTIONS = Array.from({ length: 24 * 4 }, (_, i) => {
@@ -19,11 +14,10 @@ export const TIME_OPTIONS = Array.from({ length: 24 * 4 }, (_, i) => {
   return { value: `${hours}:${minutes}`, label: `${hours}:${minutes}` };
 });
 
+//TODO - add an always on toggle and then disable form
 const CreateScheduleUI = ({
   onAddInterval,
   onRemoveInterval,
-  onSetSchedule,
-  onRemoveSchedule,
 }: CreateScheduleUIProps) => {
   const [selectedDays, setSelectedDays] = useState<(typeof DaysOfTheWeek)[]>(
     []
@@ -61,10 +55,10 @@ const CreateScheduleUI = ({
   };
 
   return (
-    <div className="p-4 w-full max-w-md">
-      <h2 className="text-xl font-bold mb-4">Set up blocking schedule</h2>
+    <div className="w-full max-w-md">
+      <h4 className="text-x font-bold mb-4">Set up blocking schedule</h4>
       <div className="space-y-4">
-        <h3 className="text-md font-semibold">Set Times</h3>
+        <p className="text-md font-semibold">Set Times</p>
         {timeIntervals.map((interval, index) => (
           <div key={index} className="flex gap-2 align-baseline">
             <BaseSelect
@@ -89,7 +83,10 @@ const CreateScheduleUI = ({
             </button>
           </div>
         ))}
-        <button className="btn btn-primary w-full" onClick={handleAddInterval}>
+        <button
+          className="btn btn-secondary w-full"
+          onClick={handleAddInterval}
+        >
           Add interval
         </button>
 

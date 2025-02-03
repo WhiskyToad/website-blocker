@@ -1,4 +1,5 @@
 import BaseModal from '../BaseModal/BaseModal';
+import CreateScheduleUI from '../CreateScheduleUI/CreateScheduleUI';
 import TextAreaInput from '../TextAreaInput/TextAreaInput';
 import TextInput from '../TextInput/TextInput';
 
@@ -15,6 +16,7 @@ export interface EditCategoryModalProps {
   getErrors: (field: keyof EditCategoryModalFormValues) => string | undefined;
   formValues: EditCategoryModalFormValues;
   submitText?: string;
+  isEdit: boolean;
 }
 
 const EditCategoryModal = ({
@@ -25,31 +27,38 @@ const EditCategoryModal = ({
   getErrors,
   formValues,
   submitText = 'Save Changes',
+  isEdit,
 }: EditCategoryModalProps) => {
   return (
     <form onSubmit={onSubmit}>
       <BaseModal
-        title="Edit Category"
+        title={isEdit ? 'Edit Category' : 'Create Category'}
         isOpen={isOpen}
         onClose={onClose}
         submitText={submitText}
         submitButtonType="submit"
       >
-        <div className="space-y-4">
-          <TextInput
-            placeholder="Enter category name"
-            value={formValues.categoryName}
-            onChange={(value) => onChange('categoryName', value)}
-            required
-            label="Category Name"
-            error={getErrors('categoryName')}
-          />
-          <TextAreaInput
-            placeholder="Enter category description (optional)"
-            value={formValues.description}
-            onChange={(value) => onChange('description', value)}
-            label="Description"
-            error={getErrors('description')}
+        <div className="flex flex-col gap-4">
+          <div className="space-y-4">
+            <TextInput
+              placeholder="Enter category name"
+              value={formValues.categoryName}
+              onChange={(value) => onChange('categoryName', value)}
+              required
+              label="Category Name"
+              error={getErrors('categoryName')}
+            />
+            <TextAreaInput
+              placeholder="Enter category description (optional)"
+              value={formValues.description}
+              onChange={(value) => onChange('description', value)}
+              label="Description"
+              error={getErrors('description')}
+            />
+          </div>
+          <CreateScheduleUI
+            onAddInterval={() => {}}
+            onRemoveInterval={() => {}}
           />
         </div>
       </BaseModal>
