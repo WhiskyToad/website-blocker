@@ -1,5 +1,7 @@
 import { DaysOfTheWeek } from '../../utils/categories';
 import { useState } from 'react';
+import BaseSelect from '../BaseSelect/BaseSelect';
+import { IoMdRemoveCircleOutline } from 'react-icons/io';
 
 export interface CreateScheduleUIProps {
   onAddInterval: () => void;
@@ -10,6 +12,12 @@ export interface CreateScheduleUIProps {
   }) => void;
   onRemoveSchedule: () => void;
 }
+
+export const TIME_OPTIONS = Array.from({ length: 24 * 4 }, (_, i) => {
+  const hours = String(Math.floor(i / 4)).padStart(2, '0');
+  const minutes = String((i % 4) * 15).padStart(2, '0');
+  return { value: `${hours}:${minutes}`, label: `${hours}:${minutes}` };
+});
 
 const CreateScheduleUI = ({
   onAddInterval,
@@ -58,54 +66,47 @@ const CreateScheduleUI = ({
       <div className="space-y-4">
         <h3 className="text-md font-semibold">Set Times</h3>
         {timeIntervals.map((interval, index) => (
-          <div key={index} className="flex gap-2 items-center">
-            <div className="relative">
-              {/* <Clock className="absolute left-2 top-2 text-gray-400" size={18} /> */}
-              <input
-                type="time"
-                className="input input-bordered pl-8 w-32"
-                value={interval.start}
-                onChange={(e) => handleSetTime(index, 'start', e.target.value)}
-              />
-            </div>
-            <span>to</span>
-            <div className="relative">
-              {/* <Clock className="absolute left-2 top-2 text-gray-400" size={18} /> */}
-              <input
-                type="time"
-                className="input input-bordered pl-8 w-32"
-                value={interval.end}
-                onChange={(e) => handleSetTime(index, 'end', e.target.value)}
-              />
-            </div>
+          <div key={index} className="flex gap-2 align-baseline">
+            <BaseSelect
+              options={TIME_OPTIONS}
+              value={interval.start}
+              onChange={(value) => handleSetTime(index, 'start', value)}
+              label="Start"
+              placeholder="Select Start Time"
+            />
+            <BaseSelect
+              options={TIME_OPTIONS}
+              value={interval.end}
+              onChange={(value) => handleSetTime(index, 'end', value)}
+              label="End"
+              placeholder="Select End Time"
+            />
             <button
-              className="bg-red-400 hover:bg-red-500 text-white"
+              className="mt-11"
               onClick={() => handleRemoveInterval(index)}
             >
-              -
+              <IoMdRemoveCircleOutline size={24} color="red" />
             </button>
           </div>
         ))}
-        <button
-          className="bg-gray-200 hover:bg-gray-300"
-          onClick={handleAddInterval}
-        >
+        <button className="btn btn-primary w-full" onClick={handleAddInterval}>
           Add interval
         </button>
 
         <h3 className="text-md font-semibold mt-4">
           Selected Days (Click a day to deactivate)
         </h3>
-        <div className="flex gap-2">
+        <div className="flex gap-2 w-full justify-between">
           {Object.values(DaysOfTheWeek).map((day) => (
-            <button
-              key={day}
-              onClick={() => toggleDay(day)}
-              className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold transition
+            <div className="tooltip" key={day} data-tip={day}>
+              <button
+                onClick={() => toggleDay(day)}
+                className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold transition
                   ${selectedDays.includes(day) ? 'bg-green-500' : 'bg-gray-300'}`}
-            >
-              {day}
-            </button>
+              >
+                {day.at(0)}
+              </button>
+            </div>
           ))}
         </div>
       </div>
