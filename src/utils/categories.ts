@@ -1,16 +1,15 @@
 export interface ICategory {
   categoryName: string;
   categoryDescription?: string;
-  schedule?: ISchedule;
+  schedule: ISchedule;
   id: string;
   isEnabled: boolean;
   domains: string[];
 }
 
 export interface ISchedule {
-  days: (keyof typeof DaysOfTheWeek)[];
-  startTime: string;
-  endTime: string;
+  days: (typeof DaysOfTheWeek)[keyof typeof DaysOfTheWeek][];
+  intervals: { start: string; end: string }[];
 }
 
 export const DaysOfTheWeek = {

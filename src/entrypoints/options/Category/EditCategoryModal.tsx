@@ -29,6 +29,10 @@ const EditCategoryModal = ({
   const initialValues = {
     categoryName: categoryToEdit?.categoryName ?? '',
     description: categoryToEdit?.categoryDescription ?? '',
+    schedule: categoryToEdit?.schedule ?? {
+      days: [],
+      intervals: [],
+    },
   };
   const {
     handleSubmit,
@@ -52,6 +56,7 @@ const EditCategoryModal = ({
         categoryDescription: data.description,
         isEnabled: categoryToEdit.isEnabled,
         domains: categoryToEdit.domains,
+        schedule: data.schedule,
       });
     } else {
       await addCategory({
@@ -60,6 +65,7 @@ const EditCategoryModal = ({
         id: uuidv4(),
         isEnabled: true,
         domains: [],
+        schedule: data.schedule,
       });
     }
     onClose();
@@ -74,6 +80,7 @@ const EditCategoryModal = ({
       submitText="Save Changes"
       onChange={(f, v) => setValue(f, v, { shouldValidate: true })}
       getErrors={getErrors}
+      isEdit={!!categoryToEdit}
     />
   );
 };

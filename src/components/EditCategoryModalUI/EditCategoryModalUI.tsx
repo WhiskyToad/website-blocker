@@ -1,3 +1,4 @@
+import type { DaysOfTheWeek } from '@/utils/categories';
 import BaseModal from '../BaseModal/BaseModal';
 import CreateScheduleUI from '../CreateScheduleUI/CreateScheduleUI';
 import TextAreaInput from '../TextAreaInput/TextAreaInput';
@@ -6,6 +7,10 @@ import TextInput from '../TextInput/TextInput';
 export interface EditCategoryModalFormValues {
   categoryName: string;
   description: string;
+  schedule: {
+    days: (typeof DaysOfTheWeek)[keyof typeof DaysOfTheWeek][];
+    intervals: { start: string; end: string }[];
+  };
 }
 
 export interface EditCategoryModalProps {
