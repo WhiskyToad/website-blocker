@@ -22,6 +22,9 @@ export const DaysOfTheWeek = {
   Sunday: 'Sunday',
 } as const;
 
+export type DayOfWeek = (typeof DaysOfTheWeek)[keyof typeof DaysOfTheWeek];
+export const daysOfWeekOptions = Object.values(DaysOfTheWeek) as DayOfWeek[];
+
 export async function addCategory(category: ICategory): Promise<void> {
   try {
     const categories = await getCategories();

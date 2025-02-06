@@ -1,4 +1,4 @@
-import type { DaysOfTheWeek } from '@/utils/categories';
+import type { ISchedule } from '@/utils/categories';
 import BaseModal from '../BaseModal/BaseModal';
 import CreateScheduleUI from '../CreateScheduleUI/CreateScheduleUI';
 import TextAreaInput from '../TextAreaInput/TextAreaInput';
@@ -7,17 +7,17 @@ import TextInput from '../TextInput/TextInput';
 export interface EditCategoryModalFormValues {
   categoryName: string;
   description: string;
-  schedule: {
-    days: (typeof DaysOfTheWeek)[keyof typeof DaysOfTheWeek][];
-    intervals: { start: string; end: string }[];
-  };
+  schedule: ISchedule;
 }
 
 export interface EditCategoryModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-  onChange: (field: keyof EditCategoryModalFormValues, value: string) => void;
+  onChange: (
+    field: keyof EditCategoryModalFormValues,
+    value: string | ISchedule
+  ) => void;
   getErrors: (field: keyof EditCategoryModalFormValues) => string | undefined;
   formValues: EditCategoryModalFormValues;
   submitText?: string;
@@ -61,10 +61,7 @@ const EditCategoryModal = ({
               error={getErrors('description')}
             />
           </div>
-          <CreateScheduleUI
-            onAddInterval={() => {}}
-            onRemoveInterval={() => {}}
-          />
+          <CreateScheduleUI onChange={onChange} formValues={formValues} />
         </div>
       </BaseModal>
     </form>

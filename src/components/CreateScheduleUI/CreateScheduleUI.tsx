@@ -1,11 +1,18 @@
-import { DaysOfTheWeek } from '../../utils/categories';
-import { useState } from 'react';
-import BaseSelect from '../BaseSelect/BaseSelect';
 import { IoMdRemoveCircleOutline } from 'react-icons/io';
+import BaseSelect from '../BaseSelect/BaseSelect';
+import type { EditCategoryModalFormValues } from '../EditCategoryModalUI/EditCategoryModalUI';
+import {
+  daysOfWeekOptions,
+  type DayOfWeek,
+  type ISchedule,
+} from '@/utils/categories';
 
-export interface CreateScheduleUIProps {
-  onAddInterval: () => void;
-  onRemoveInterval: (index: number) => void;
+interface CreateScheduleUIProps {
+  formValues: EditCategoryModalFormValues;
+  onChange: (
+    field: keyof EditCategoryModalFormValues,
+    value: ISchedule
+  ) => void;
 }
 
 export const TIME_OPTIONS = Array.from({ length: 24 * 4 }, (_, i) => {
@@ -14,34 +21,14 @@ export const TIME_OPTIONS = Array.from({ length: 24 * 4 }, (_, i) => {
   return { value: `${hours}:${minutes}`, label: `${hours}:${minutes}` };
 });
 
-//TODO - add an always on toggle and then disable form
-const CreateScheduleUI = ({
-  onAddInterval,
-  onRemoveInterval,
-}: CreateScheduleUIProps) => {
-  const [selectedDays, setSelectedDays] = useState<(typeof DaysOfTheWeek)[]>(
-    []
-  );
-  const [timeIntervals, setTimeIntervals] = useState([
-    { start: '09:00', end: '17:00' },
-  ]);
+const CreateScheduleUI = ({ formValues, onChange }: CreateScheduleUIProps) => {
+  const { days: selectedDays, intervals: timeIntervals } = formValues.schedule;
 
-  const toggleDay = (selectedDay: typeof DaysOfTheWeek) => {
-    if (selectedDays.includes(selectedDay)) {
-      setSelectedDays((prev) => prev.filter((day) => day !== selectedDay));
-    } else {
-      setSelectedDays((prev) => [...prev, selectedDay]);
-    }
-  };
-
-  const handleAddInterval = () => {
-    setTimeIntervals((prev) => [...prev, { start: '', end: '' }]);
-    if (onAddInterval) onAddInterval();
-  };
-
-  const handleRemoveInterval = (index: number) => {
-    setTimeIntervals((prev) => prev.filter((_, i) => i !== index));
-    if (onRemoveInterval) onRemoveInterval(index);
+  const toggleDay = (selectedDay: DayOfWeek) => {
+    const updatedDays = selectedDays.includes(selectedDay)
+      ? selectedDays.filter((day) => day !== selectedDay)
+      : [...selectedDays, selectedDay];
+    onChange('schedule', { ...formValues.schedule, days: updatedDays });
   };
 
   const handleSetTime = (
@@ -51,7 +38,25 @@ const CreateScheduleUI = ({
   ) => {
     const updatedIntervals = [...timeIntervals];
     updatedIntervals[index][field] = value;
-    setTimeIntervals(updatedIntervals);
+    onChange('schedule', {
+      ...formValues.schedule,
+      intervals: updatedIntervals,
+    });
+  };
+
+  const handleAddInterval = () => {
+    onChange('schedule', {
+      ...formValues.schedule,
+      intervals: [...timeIntervals, { start: '', end: '' }],
+    });
+  };
+
+  const handleRemoveInterval = (index: number) => {
+    const updatedIntervals = timeIntervals.filter((_, i) => i !== index);
+    onChange('schedule', {
+      ...formValues.schedule,
+      intervals: updatedIntervals,
+    });
   };
 
   return (
@@ -94,7 +99,7 @@ const CreateScheduleUI = ({
           Selected Days (Click a day to deactivate)
         </h3>
         <div className="flex gap-2 w-full justify-between">
-          {Object.values(DaysOfTheWeek).map((day) => (
+          {daysOfWeekOptions.map((day: DayOfWeek) => (
             <div className="tooltip" key={day} data-tip={day}>
               <button
                 onClick={() => toggleDay(day)}
