@@ -83,12 +83,14 @@ const CreateScheduleUI = ({ formValues, onChange }: CreateScheduleUIProps) => {
             <button
               className="mt-11"
               onClick={() => handleRemoveInterval(index)}
+              type="button"
             >
               <IoMdRemoveCircleOutline size={24} color="red" />
             </button>
           </div>
         ))}
         <button
+          type="button"
           className="btn btn-secondary w-full"
           onClick={handleAddInterval}
         >
@@ -102,6 +104,7 @@ const CreateScheduleUI = ({ formValues, onChange }: CreateScheduleUIProps) => {
           {daysOfWeekOptions.map((day: DayOfWeek) => (
             <div className="tooltip" key={day} data-tip={day}>
               <button
+                type="button"
                 onClick={() => toggleDay(day)}
                 className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold transition
                   ${selectedDays.includes(day) ? 'bg-green-500' : 'bg-gray-300'}`}

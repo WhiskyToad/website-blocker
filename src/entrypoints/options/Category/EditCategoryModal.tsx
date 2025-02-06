@@ -19,6 +19,15 @@ const editCategorySchema = z.object({
     .string()
     .max(200, "Description can't exceed 200 characters")
     .optional(),
+  schedule: z.object({
+    days: z.array(z.string()),
+    intervals: z.array(
+      z.object({
+        start: z.string(),
+        end: z.string(),
+      })
+    ),
+  }),
 });
 
 const EditCategoryModal = ({
@@ -49,6 +58,7 @@ const EditCategoryModal = ({
     errors[field]?.message;
 
   const onSubmit = async (data: EditCategoryModalFormValues) => {
+    console.log(data);
     if (categoryToEdit) {
       await editCategory({
         id: categoryToEdit.id,
