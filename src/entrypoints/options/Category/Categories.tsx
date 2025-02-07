@@ -60,9 +60,11 @@ const Categories = () => {
   };
 
   const handleEditModalOpen = (id: string, modalType: CategoriesModals) => {
-    setCategoryToEdit(
-      categories.find((category) => category.id === id) || null
-    );
+    const category = categories.find((category) => category.id === id);
+    if (!category) {
+      return;
+    }
+    setCategoryToEdit(category);
     setOpenModal(modalType);
   };
 
