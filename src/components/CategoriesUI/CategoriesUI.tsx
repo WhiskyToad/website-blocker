@@ -11,6 +11,7 @@ export interface CategoryProps {
   toggleEnabled: (id: string) => void;
   onAddDomain: (id: string) => void;
   onRemoveSite: (categoryId: string, site: string) => void;
+  onEditSchedule: (id: string) => void;
 }
 
 const CategoriesUI = ({
@@ -21,6 +22,7 @@ const CategoriesUI = ({
   toggleEnabled,
   onAddDomain,
   onRemoveSite,
+  onEditSchedule,
 }: CategoryProps) => {
   return (
     <div className="p-6 space-y-6 bg-base-100 rounded-lg shadow-md">
@@ -53,6 +55,7 @@ const CategoriesUI = ({
               toggleEnabled={toggleEnabled}
               isEnabled={category.isEnabled}
               onAddDomain={onAddDomain}
+              onEditSchedule={onEditSchedule}
             />
             <CategorySiteList
               blockedSites={category.domains}

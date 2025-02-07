@@ -1,18 +1,17 @@
 import { IoMdRemoveCircleOutline } from 'react-icons/io';
 import BaseSelect from '../BaseSelect/BaseSelect';
-import type { EditCategoryModalFormValues } from '../EditCategoryModalUI/EditCategoryModalUI';
 import {
   daysOfWeekOptions,
   type DayOfWeek,
   type ISchedule,
 } from '@/utils/categories';
 
+export interface CreateScheduleFormValues {
+  schedule: ISchedule;
+}
 interface CreateScheduleUIProps {
-  formValues: EditCategoryModalFormValues;
-  onChange: (
-    field: keyof EditCategoryModalFormValues,
-    value: ISchedule
-  ) => void;
+  formValues: CreateScheduleFormValues;
+  onChange: (field: keyof CreateScheduleFormValues, value: ISchedule) => void;
 }
 
 export const TIME_OPTIONS = Array.from({ length: 24 * 4 }, (_, i) => {

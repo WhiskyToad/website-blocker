@@ -29,6 +29,7 @@ const defaultProps: CategoryHeaderProps = {
   toggleEnabled: () => {},
   isEnabled: true,
   onAddDomain: () => {},
+  onEditSchedule: () => {},
 };
 
 export const Default: Story = {

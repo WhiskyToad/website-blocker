@@ -11,6 +11,7 @@ export interface CategoryHeaderProps {
   onEditCategory: (id: string) => void;
   toggleEnabled: (id: string) => void;
   onAddDomain: (id: string) => void;
+  onEditSchedule: (id: string) => void;
 }
 
 const CategoryHeader = ({
@@ -22,6 +23,7 @@ const CategoryHeader = ({
   onEditCategory,
   toggleEnabled,
   onAddDomain,
+  onEditSchedule,
 }: CategoryHeaderProps) => {
   return (
     <div className="p-4 bg-neutral text-neutral-content rounded-lg">
@@ -69,6 +71,7 @@ const CategoryHeader = ({
         <button
           className="btn btn-secondary btn-sm flex items-center space-x-2"
           aria-label={`Set schedule for ${categoryName}`}
+          onClick={() => onEditSchedule(categoryId)}
         >
           <MdOutlineTimer size={16} />
           <span>Schedule</span>

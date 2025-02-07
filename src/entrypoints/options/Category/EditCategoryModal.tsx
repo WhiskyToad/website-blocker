@@ -58,7 +58,6 @@ const EditCategoryModal = ({
     errors[field]?.message;
 
   const onSubmit = async (data: EditCategoryModalFormValues) => {
-    console.log(data);
     if (categoryToEdit) {
       await editCategory({
         id: categoryToEdit.id,

@@ -1,5 +1,4 @@
 import CategoriesUI from '@/components/CategoriesUI/CategoriesUI';
-import useModal from '@/entrypoints/hooks/useModal';
 import EditCategoryModal from './EditCategoryModal';
 import {
   deleteCategory,
@@ -10,24 +9,16 @@ import {
 import { useCallback, useEffect, useState } from 'react';
 import AddDomainModal from './AddDomainModal';
 import ConfirmDeleteModalUI from '@/components/ConfirmDeleteModalUI/ConfirmDeleteModalUI';
+import EditScheduleModal from './EditScheduleModal';
 
+type CategoriesModals =
+  | 'none'
+  | 'edit'
+  | 'addDomain'
+  | 'confirmDelete'
+  | 'editSchedule';
 const Categories = () => {
-  const {
-    visible: showEditCategoryModal,
-    openModal: openEditCategoryModal,
-    closeModal: closeEditCategoryModal,
-  } = useModal();
-  const {
-    visible: showAddDomainModal,
-    openModal: openAddDomainModal,
-    closeModal: closeAddDomainModal,
-  } = useModal();
-  const {
-    visible: showConfirmDeleteModal,
-    openModal: openConfirmDeleteModal,
-    closeModal: closeConfirmDeleteModal,
-  } = useModal();
-
+  const [openModal, setOpenModal] = useState<CategoriesModals>('none');
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [categoryToEdit, setCategoryToEdit] = useState<ICategory | null>(null);
   const [confirmDeleteModalCallback, setConfirmDeleteModalCallback] = useState<
@@ -48,7 +39,7 @@ const Categories = () => {
       await deleteCategory(id);
       handleCloseModals();
     });
-    openConfirmDeleteModal();
+    setOpenModal('confirmDelete');
   };
 
   const handleRemoveSite = (categoryId: string, domainToDelete: string) => {
@@ -64,7 +55,7 @@ const Categories = () => {
         handleCloseModals();
       };
       setConfirmDeleteModalCallback(() => removeDomainCallback);
-      openConfirmDeleteModal();
+      setOpenModal('confirmDelete');
     }
   };
 
@@ -72,16 +63,14 @@ const Categories = () => {
     setCategoryToEdit(
       categories.find((category) => category.id === id) || null
     );
-    openEditCategoryModal();
+    setOpenModal('edit');
   };
 
-  const handleCloseModals = () => {
-    closeEditCategoryModal();
-    closeAddDomainModal();
-    closeConfirmDeleteModal();
-    setConfirmDeleteModalCallback(() => {});
-    setCategoryToEdit(null);
-    fetchCategories();
+  const handleEditSchedule = (id: string) => {
+    setCategoryToEdit(
+      categories.find((category) => category.id === id) || null
+    );
+    setOpenModal('editSchedule');
   };
 
   const handleToggleEnabled = async (id: string) => {
@@ -97,35 +86,51 @@ const Categories = () => {
     setCategoryToEdit(
       categories.find((category) => category.id === id) || null
     );
-    openAddDomainModal();
+    setOpenModal('addDomain');
   };
+
+  const handleCloseModals = () => {
+    setOpenModal('none');
+    setConfirmDeleteModalCallback(() => {});
+    setCategoryToEdit(null);
+    fetchCategories();
+  };
+
   return (
     <>
+      {categoryToEdit && (
+        <>
+          <AddDomainModal
+            isOpen={openModal === 'addDomain'}
+            category={categoryToEdit}
+            onClose={handleCloseModals}
+          />
+          <EditScheduleModal
+            isOpen={openModal === 'editSchedule'}
+            onClose={handleCloseModals}
+            categoryToEdit={categoryToEdit}
+          />
+        </>
+      )}
       <EditCategoryModal
-        isOpen={showEditCategoryModal}
+        isOpen={openModal === 'edit'}
         categoryToEdit={categoryToEdit}
         onClose={handleCloseModals}
       />
-      {categoryToEdit && (
-        <AddDomainModal
-          isOpen={showAddDomainModal}
-          category={categoryToEdit}
-          onClose={handleCloseModals}
-        />
-      )}
       <ConfirmDeleteModalUI
-        isOpen={showConfirmDeleteModal}
+        isOpen={openModal === 'confirmDelete'}
         onClose={handleCloseModals}
         onConfirm={confirmDeleteModalCallback}
       />
       <CategoriesUI
         categories={categories}
-        onAddCategory={openEditCategoryModal}
+        onAddCategory={() => setOpenModal('edit')}
         onDeleteCategory={handleDeleteCategory}
         onEditCategory={handleEditCategory}
         toggleEnabled={handleToggleEnabled}
         onAddDomain={handleShowAddDomainModal}
         onRemoveSite={handleRemoveSite}
+        onEditSchedule={handleEditSchedule}
       />
     </>
   );
