@@ -10,6 +10,7 @@ export interface ICategory {
 export interface ISchedule {
   days: (typeof DaysOfTheWeek)[keyof typeof DaysOfTheWeek][];
   intervals: { start: string; end: string }[];
+  alwaysOn: boolean;
 }
 
 export const DaysOfTheWeek = {

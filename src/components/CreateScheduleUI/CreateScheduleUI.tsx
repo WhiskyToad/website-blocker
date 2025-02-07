@@ -5,6 +5,7 @@ import {
   type DayOfWeek,
   type ISchedule,
 } from '@/utils/categories';
+import BaseToggle from '../BaseToggle/BaseToggle';
 
 export interface CreateScheduleFormValues {
   schedule: ISchedule;
@@ -58,10 +59,22 @@ const CreateScheduleUI = ({ formValues, onChange }: CreateScheduleUIProps) => {
     });
   };
 
+  const handleAlwaysOnToggle = () => {
+    onChange('schedule', {
+      ...formValues.schedule,
+      alwaysOn: !formValues.schedule.alwaysOn,
+    });
+  };
+
   return (
     <div className="w-full max-w-md">
       <h4 className="text-x font-bold mb-4">Set up blocking schedule</h4>
       <div className="space-y-4">
+        <BaseToggle
+          checked={formValues.schedule.alwaysOn}
+          label={'Always enabled?'}
+          onClick={handleAlwaysOnToggle}
+        />
         <p className="text-md font-semibold">Set Times</p>
         {timeIntervals.map((interval, index) => (
           <div key={index} className="flex gap-2 align-baseline">

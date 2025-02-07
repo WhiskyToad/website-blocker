@@ -39,10 +39,10 @@ const EditScheduleModal = ({
   });
 
   const onSubmit = async (data: CreateScheduleFormValues) => {
-    const { days, intervals } = data.schedule;
+    const { days, intervals, alwaysOn } = data.schedule;
     await editCategory({
       ...categoryToEdit,
-      schedule: { days, intervals },
+      schedule: { days, intervals, alwaysOn },
     });
 
     onClose();

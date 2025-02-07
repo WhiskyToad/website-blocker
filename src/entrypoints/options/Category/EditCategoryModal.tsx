@@ -41,6 +41,7 @@ const EditCategoryModal = ({
     schedule: categoryToEdit?.schedule ?? {
       days: [],
       intervals: [],
+      alwaysOn: false,
     },
   };
   const {
