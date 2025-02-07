@@ -57,7 +57,6 @@ export async function deleteCategory(id: string): Promise<void> {
     const updatedCategories = categories.filter(
       (category) => category.id !== id
     );
-    //TODO - make sure this also will delete the sites
     await chrome.storage.local.set({ categories: updatedCategories });
   } catch (error) {
     console.error('Failed to delete category:', error);
@@ -70,6 +69,46 @@ export async function getCategories(): Promise<ICategory[]> {
     return categories || [];
   } catch (error) {
     console.error('Failed to get categories:', error);
+    return [];
+  }
+}
+
+export async function getActiveDomains(): Promise<string[]> {
+  try {
+    const categories = await getCategories();
+    const currentDay = new Date().toLocaleDateString('en-US', {
+      weekday: 'long',
+    }) as DayOfWeek;
+    const currentTime = new Date().toTimeString().slice(0, 5); // "HH:MM" format
+
+    let activeDomains: string[] = [];
+
+    categories.forEach((category) => {
+      if (!category.isEnabled) return;
+
+      if (
+        category.schedule.alwaysOn ||
+        category.schedule.days.includes(currentDay)
+      ) {
+        const isWithinSchedule =
+          category.schedule.alwaysOn ||
+          category.schedule.intervals.some((interval) => {
+            return currentTime >= interval.start && currentTime <= interval.end;
+          });
+
+        if (isWithinSchedule) {
+          activeDomains.push(...category.domains);
+        }
+      }
+    });
+
+    // Remove duplicate domains
+    activeDomains = [...new Set(activeDomains)];
+
+    console.log('Active domains:', activeDomains);
+    return activeDomains;
+  } catch (error) {
+    console.error('Failed to get active domains:', error);
     return [];
   }
 }

@@ -1,14 +1,22 @@
-import {
-  redirectExtensionPath,
-  getNextBlockedSiteIndex,
-  transformChromeRuleToIBlockedSite,
-} from './utils.ts';
+import { getActiveDomains } from './categories';
 
 export interface IBlockedSite {
   id: number;
   domain: string;
   actionType: chrome.declarativeNetRequest.RuleActionType;
 }
+
+export function transformChromeRuleToIBlockedSite(
+  rule: chrome.declarativeNetRequest.Rule
+): IBlockedSite {
+  return {
+    id: rule.id,
+    domain: rule.condition.urlFilter?.replace('||', '') ?? '',
+    actionType: rule.action.type,
+  };
+}
+
+export const redirectExtensionPath = '/blocked.html';
 
 function getBlockChromeRule(
   id: number,
@@ -27,26 +35,26 @@ function getBlockChromeRule(
   };
 }
 
-export async function addBlockedSite(domain: string): Promise<void> {
-  try {
-    const existingBlockedSites = await filterBlockedSitesByDomain(domain);
-    const blockedSiteId = await getNextBlockedSiteIndex();
-    await chrome.declarativeNetRequest.updateDynamicRules({
-      addRules: [getBlockChromeRule(blockedSiteId, domain)],
-      removeRuleIds: existingBlockedSites.map((site) => site.id),
-    });
-  } catch (error) {
-    console.error('Failed to add blocked site:', error);
-  }
-}
-export async function filterBlockedSitesByDomain(
-  domain: string
-): Promise<IBlockedSite[]> {
-  if (!domain.trim()) {
-    return [];
-  }
+const updateBlockedWebsites = async () => {
+  //remove all blocked sites
   const blockedSites = await getBlockedSites();
-  return blockedSites.filter((site) => site.domain === domain);
+  await chrome.declarativeNetRequest.updateDynamicRules({
+    removeRuleIds: blockedSites.map((site) => site.id),
+  });
+
+  //Get all the active domains and add them to the block list
+  const activeDomains = await getActiveDomains();
+  await chrome.declarativeNetRequest.updateDynamicRules({
+    addRules: activeDomains.map((site, index) =>
+      getBlockChromeRule(index, site)
+    ),
+  });
+};
+
+export function startScheduleMonitor(): void {
+  // Update immediately and then at regular intervals (e.g., every minute)
+  updateBlockedWebsites();
+  setInterval(updateBlockedWebsites, 60000); // 1-minute interval
 }
 
 export async function getBlockedSites(): Promise<IBlockedSite[]> {
