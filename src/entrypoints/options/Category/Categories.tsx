@@ -59,18 +59,11 @@ const Categories = () => {
     }
   };
 
-  const handleEditCategory = (id: string) => {
+  const handleEditModalOpen = (id: string, modalType: CategoriesModals) => {
     setCategoryToEdit(
       categories.find((category) => category.id === id) || null
     );
-    setOpenModal('edit');
-  };
-
-  const handleEditSchedule = (id: string) => {
-    setCategoryToEdit(
-      categories.find((category) => category.id === id) || null
-    );
-    setOpenModal('editSchedule');
+    setOpenModal(modalType);
   };
 
   const handleToggleEnabled = async (id: string) => {
@@ -80,13 +73,6 @@ const Categories = () => {
       await editCategory(category);
       fetchCategories();
     }
-  };
-
-  const handleShowAddDomainModal = (id: string) => {
-    setCategoryToEdit(
-      categories.find((category) => category.id === id) || null
-    );
-    setOpenModal('addDomain');
   };
 
   const handleCloseModals = () => {
@@ -126,11 +112,11 @@ const Categories = () => {
         categories={categories}
         onAddCategory={() => setOpenModal('edit')}
         onDeleteCategory={handleDeleteCategory}
-        onEditCategory={handleEditCategory}
+        onEditCategory={(id: string) => handleEditModalOpen(id, 'edit')}
         toggleEnabled={handleToggleEnabled}
-        onAddDomain={handleShowAddDomainModal}
+        onAddDomain={(id: string) => handleEditModalOpen(id, 'addDomain')}
         onRemoveSite={handleRemoveSite}
-        onEditSchedule={handleEditSchedule}
+        onEditSchedule={(id: string) => handleEditModalOpen(id, 'editSchedule')}
       />
     </>
   );
