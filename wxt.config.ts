@@ -6,19 +6,19 @@ export default defineConfig({
   extensionApi: 'chrome',
   modules: ['@wxt-dev/module-react'],
   vite: () => ({
-    plugins: [ react()],
+    plugins: [react()],
   }),
   srcDir: 'src',
   outDir: 'build',
   manifest: {
     name: 'Block it out',
     permissions: [
-    "declarativeNetRequest",
-    "storage",
-    "activeTab"
+      'declarativeNetRequest',
+      'storage',
+      'activeTab',
+      'alarms',
+      'declarativeNetRequestWithHostAccess',
     ],
-    host_permissions: [
-      "<all_urls>"
-    ]
-  }
+    host_permissions: ['<all_urls>'],
+  },
 });

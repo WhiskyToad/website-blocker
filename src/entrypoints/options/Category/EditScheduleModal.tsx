@@ -15,6 +15,7 @@ interface EditScheduleModalWrapperProps {
 
 const editScheduleSchema = z.object({
   schedule: z.object({
+    alwaysOn: z.boolean(),
     days: z.array(z.string()),
     intervals: z.array(
       z.object({

@@ -46,15 +46,25 @@ const updateBlockedWebsites = async () => {
   const activeDomains = await getActiveDomains();
   await chrome.declarativeNetRequest.updateDynamicRules({
     addRules: activeDomains.map((site, index) =>
-      getBlockChromeRule(index, site)
+      getBlockChromeRule(index + 1, site)
     ),
+  });
+  chrome.declarativeNetRequest.getDynamicRules((rules) => {
+    console.log('Active blocking rules:', rules);
   });
 };
 
 export function startScheduleMonitor(): void {
-  // Update immediately and then at regular intervals (e.g., every minute)
-  updateBlockedWebsites();
-  setInterval(updateBlockedWebsites, 60000); // 1-minute interval
+  updateBlockedWebsites(); // Initial execution
+  chrome.alarms.create('scheduleMonitor', { periodInMinutes: 1 });
+
+  chrome.alarms.onAlarm.addListener((alarm) => {
+    if (alarm.name === 'scheduleMonitor') {
+      updateBlockedWebsites();
+    }
+  });
+
+  console.log('Schedule monitor started');
 }
 
 export async function getBlockedSites(): Promise<IBlockedSite[]> {

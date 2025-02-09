@@ -20,6 +20,7 @@ const editCategorySchema = z.object({
     .max(200, "Description can't exceed 200 characters")
     .optional(),
   schedule: z.object({
+    alwaysOn: z.boolean(),
     days: z.array(z.string()),
     intervals: z.array(
       z.object({
