@@ -51,9 +51,6 @@ const updateBlockedWebsites = async () => {
       getBlockChromeRule(index + 1, site)
     ),
   });
-  chrome.declarativeNetRequest.getDynamicRules((rules) => {
-    console.log('Active blocking rules:', rules);
-  });
 };
 
 export function startScheduleMonitor(): void {
@@ -65,8 +62,6 @@ export function startScheduleMonitor(): void {
       updateBlockedWebsites();
     }
   });
-
-  console.log('Schedule monitor started');
 }
 
 export async function getBlockedSites(): Promise<IBlockedSite[]> {
