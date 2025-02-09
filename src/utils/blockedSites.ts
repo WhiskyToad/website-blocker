@@ -26,7 +26,9 @@ function getBlockChromeRule(
     id,
     action: {
       type: chrome.declarativeNetRequest.RuleActionType.REDIRECT,
-      redirect: { extensionPath: redirectExtensionPath },
+      redirect: {
+        extensionPath: `${redirectExtensionPath}?blockedSite=${domain}`,
+      },
     },
     condition: {
       urlFilter: domain,
