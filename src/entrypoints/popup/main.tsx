@@ -1,10 +1,10 @@
 import { createRoot } from 'react-dom/client';
 import { StrictMode } from 'react';
-import Options from './Options';
 import '../../styles.css';
+import Popup from './Popup';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <Options />
+    <Popup />
   </StrictMode>
 );

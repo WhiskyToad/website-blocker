@@ -37,13 +37,9 @@ const Options = () => {
   }, [fetchCategories]);
 
   const handleDeleteCategory = async (id: string) => {
-    const callback = () => {
-      fetchCategories();
-      closeModal();
-    };
     setConfirmDeleteModalCallback(() => async () => {
       await deleteCategory(id);
-      callback();
+      handleCloseModals();
     });
     openDeleteModal();
   };
@@ -87,6 +83,7 @@ const Options = () => {
     setOpenModal('none');
     setConfirmDeleteModalCallback(() => {});
     setCategoryToEdit(null);
+    closeModal();
     fetchCategories();
   };
 
