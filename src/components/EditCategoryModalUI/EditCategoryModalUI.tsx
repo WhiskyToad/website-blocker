@@ -22,6 +22,7 @@ export interface EditCategoryModalProps {
   formValues: EditCategoryModalFormValues;
   submitText?: string;
   isEdit: boolean;
+  onDelete: () => void;
 }
 
 const EditCategoryModal = ({
@@ -33,6 +34,7 @@ const EditCategoryModal = ({
   formValues,
   submitText = 'Save Changes',
   isEdit,
+  onDelete,
 }: EditCategoryModalProps) => {
   return (
     <form onSubmit={onSubmit}>
@@ -42,6 +44,8 @@ const EditCategoryModal = ({
         onClose={onClose}
         submitText={submitText}
         submitButtonType="submit"
+        showDeleteButton={isEdit}
+        onDelete={onDelete}
       >
         <div className="flex flex-col gap-4">
           <div className="space-y-4">

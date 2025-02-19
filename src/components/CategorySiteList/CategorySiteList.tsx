@@ -10,13 +10,8 @@ const CategorySiteList = ({
   onRemoveSite,
 }: CategorySiteListProps) => {
   return (
-    <div className="collapse collapse-arrow bg-neutral text-neutral-content rounded-lg shadow-md">
-      <input type="checkbox" className="peer" />
-      <div className="collapse-title text-lg font-bold flex items-center justify-between">
-        <span>Blocked Websites</span>
-        <span className="badge badge-secondary">{blockedSites.length}</span>
-      </div>
-      <div className="collapse-content space-y-2">
+    <div className="bg-neutral text-neutral-content rounded-lg p-4">
+      <div className="space-y-2">
         {blockedSites.length > 0 ? (
           blockedSites.map((site, index) => (
             <div

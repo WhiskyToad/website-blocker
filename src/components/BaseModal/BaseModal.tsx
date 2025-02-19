@@ -7,6 +7,10 @@ export interface BaseModalProps {
   submitButtonType?: 'button' | 'submit';
   submitButtonColor?: string;
   onSubmit?: () => void;
+  // Add new props for delete button
+  showDeleteButton?: boolean;
+  onDelete?: () => void;
+  deleteButtonText?: string;
 }
 
 const BaseModal = ({
@@ -18,6 +22,9 @@ const BaseModal = ({
   submitButtonType = 'button',
   submitButtonColor = 'primary',
   onSubmit,
+  showDeleteButton = false,
+  onDelete,
+  deleteButtonText = 'Delete',
 }: BaseModalProps) => {
   if (!isOpen) return null;
 
@@ -27,12 +34,22 @@ const BaseModal = ({
         <h3 className="font-bold text-lg">{title}</h3>
         <div className="py-4">{children}</div>
         <div className="modal-action flex justify-between">
-          <button
-            className="btn bg-gray-200 hover:bg-gray-300"
-            onClick={onClose}
-          >
-            Close
-          </button>
+          <div>
+            <button
+              className="btn bg-gray-200 hover:bg-gray-300"
+              onClick={onClose}
+            >
+              Close
+            </button>
+            {showDeleteButton && (
+              <button
+                className="btn btn-error hover:bg-red-600 ml-2"
+                onClick={onDelete}
+              >
+                {deleteButtonText}
+              </button>
+            )}
+          </div>
           <button
             type={submitButtonType}
             onClick={onSubmit}

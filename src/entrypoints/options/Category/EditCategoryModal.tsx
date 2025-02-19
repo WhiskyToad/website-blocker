@@ -11,6 +11,7 @@ interface EditCategoryModalWrapperProps {
   isOpen: boolean;
   onClose: () => void;
   categoryToEdit: ICategory | null;
+  handleDeleteCategory: (id: string) => void;
 }
 
 const editCategorySchema = z.object({
@@ -35,6 +36,7 @@ const EditCategoryModal = ({
   isOpen,
   onClose,
   categoryToEdit,
+  handleDeleteCategory,
 }: EditCategoryModalWrapperProps) => {
   const initialValues = {
     categoryName: categoryToEdit?.categoryName ?? '',
@@ -92,6 +94,11 @@ const EditCategoryModal = ({
       onChange={(f, v) => setValue(f, v, { shouldValidate: true })}
       getErrors={getErrors}
       isEdit={!!categoryToEdit}
+      onDelete={() => {
+        if (categoryToEdit) {
+          handleDeleteCategory(categoryToEdit.id);
+        }
+      }}
     />
   );
 };

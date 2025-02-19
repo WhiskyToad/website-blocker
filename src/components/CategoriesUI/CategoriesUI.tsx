@@ -5,8 +5,6 @@ import { FaPlus } from 'react-icons/fa';
 
 export interface CategoryProps {
   categories: ICategory[];
-  onAddCategory: () => void;
-  onDeleteCategory: (id: string) => void;
   onEditCategory: (id: string) => void;
   toggleEnabled: (id: string) => void;
   onAddDomain: (id: string) => void;
@@ -16,8 +14,6 @@ export interface CategoryProps {
 
 const CategoriesUI = ({
   categories,
-  onAddCategory,
-  onDeleteCategory,
   onEditCategory,
   toggleEnabled,
   onAddDomain,
@@ -25,45 +21,41 @@ const CategoriesUI = ({
   onEditSchedule,
 }: CategoryProps) => {
   return (
-    <div className="p-6 space-y-6 bg-base-100 rounded-lg shadow-md">
-      {/* Header Section */}
-      <div className="flex justify-between items-center border-b pb-4">
-        <h2 className="text-2xl font-bold">Categories</h2>
-        <button
-          aria-label="Add new category"
-          className="btn btn-primary flex items-center space-x-2"
-          onClick={onAddCategory}
+    <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-6 max-w-[1600px] mx-auto">
+      {categories.map((category) => (
+        <div
+          key={category.id}
+          className="p-6 space-y-4 bg-neutral text-neutral-content rounded-lg shadow-lg min-w-[400px]"
         >
-          <FaPlus />
-          <span>Add Category</span>
-        </button>
-      </div>
-
-      {/* Category List */}
-      <div className="space-y-6">
-        {categories.map((category) => (
-          <div
-            key={category.id}
-            className="p-4 space-y-4 bg-neutral text-neutral-content rounded-lg shadow-lg"
-          >
-            <CategoryHeader
-              categoryName={category.categoryName}
-              description={category.categoryDescription ?? ''}
-              categoryId={category.id}
-              onDeleteCategory={onDeleteCategory}
-              onEditCategory={onEditCategory}
-              toggleEnabled={toggleEnabled}
-              isEnabled={category.isEnabled}
-              onAddDomain={onAddDomain}
-              onEditSchedule={onEditSchedule}
-            />
-            <CategorySiteList
-              blockedSites={category.domains}
-              onRemoveSite={(site) => onRemoveSite(category.id, site)}
-            />
+          <CategoryHeader
+            categoryName={category.categoryName}
+            description={category.categoryDescription ?? ''}
+            categoryId={category.id}
+            onEditCategory={onEditCategory}
+            toggleEnabled={toggleEnabled}
+            isEnabled={category.isEnabled}
+          />
+          <CategorySiteList
+            blockedSites={category.domains}
+            onRemoveSite={(site) => onRemoveSite(category.id, site)}
+          />
+          <div className="flex justify-between">
+            <button
+              onClick={() => onEditSchedule(category.id)}
+              className="btn btn-sm btn-info"
+            >
+              Schedule
+            </button>
+            <button
+              onClick={() => onAddDomain(category.id)}
+              className="btn btn-sm btn-primary"
+            >
+              <FaPlus className="mr-2" />
+              Add Site
+            </button>
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
     </div>
   );
 };

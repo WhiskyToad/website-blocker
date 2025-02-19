@@ -11,14 +11,15 @@ import EditScheduleModal from './Category/EditScheduleModal';
 import AddDomainModal from './Category/AddDomainModal';
 import EditCategoryModal from './Category/EditCategoryModal';
 import BlockedSitesHeader from '@/components/BlockedSitesHeader/BlockedSitesHeader';
+import useModal from '../hooks/useModal';
 
-type CategoriesModals =
-  | 'none'
-  | 'edit'
-  | 'addDomain'
-  | 'confirmDelete'
-  | 'editSchedule';
+type CategoriesModals = 'none' | 'edit' | 'addDomain' | 'editSchedule';
 const Options = () => {
+  const {
+    visible: showDeleteModal,
+    openModal: openDeleteModal,
+    closeModal,
+  } = useModal();
   const [openModal, setOpenModal] = useState<CategoriesModals>('none');
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [categoryToEdit, setCategoryToEdit] = useState<ICategory | null>(null);
@@ -36,11 +37,15 @@ const Options = () => {
   }, [fetchCategories]);
 
   const handleDeleteCategory = async (id: string) => {
+    const callback = () => {
+      fetchCategories();
+      closeModal();
+    };
     setConfirmDeleteModalCallback(() => async () => {
       await deleteCategory(id);
-      handleCloseModals();
+      callback();
     });
-    setOpenModal('confirmDelete');
+    openDeleteModal();
   };
 
   const handleRemoveSite = (categoryId: string, domainToDelete: string) => {
@@ -56,7 +61,7 @@ const Options = () => {
         handleCloseModals();
       };
       setConfirmDeleteModalCallback(() => removeDomainCallback);
-      setOpenModal('confirmDelete');
+      openDeleteModal();
     }
   };
 
@@ -105,17 +110,16 @@ const Options = () => {
         isOpen={openModal === 'edit'}
         categoryToEdit={categoryToEdit}
         onClose={handleCloseModals}
+        handleDeleteCategory={handleDeleteCategory}
       />
       <ConfirmDeleteModalUI
-        isOpen={openModal === 'confirmDelete'}
+        isOpen={showDeleteModal}
         onClose={handleCloseModals}
         onConfirm={confirmDeleteModalCallback}
       />
       <BlockedSitesHeader onAddCategory={() => setOpenModal('edit')} />
       <CategoriesUI
         categories={categories}
-        onAddCategory={() => setOpenModal('edit')}
-        onDeleteCategory={handleDeleteCategory}
         onEditCategory={(id: string) => handleEditModalOpen(id, 'edit')}
         toggleEnabled={handleToggleEnabled}
         onAddDomain={(id: string) => handleEditModalOpen(id, 'addDomain')}
