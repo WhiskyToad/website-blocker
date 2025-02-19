@@ -1,5 +1,7 @@
 import { Meta, StoryObj } from '@storybook/react';
-import AddDomainModalUI, { type AddDomainModalUIProps } from './AddDomainModalUI';
+import AddDomainModalUI, {
+  type AddDomainModalUIProps,
+} from './AddDomainModalUI';
 
 const meta: Meta<typeof AddDomainModalUI> = {
   title: 'components/AddDomainModalUI',
@@ -14,7 +16,13 @@ export default meta;
 type Story = StoryObj<typeof AddDomainModalUI>;
 
 const defaultProps: AddDomainModalUIProps = {
-
+  isOpen: true,
+  onClose: () => {},
+  onChange: () => {},
+  getErrors: () => '',
+  formValues: {
+    domainName: '',
+  },
 };
 
 export const Default: Story = {

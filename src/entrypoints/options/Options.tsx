@@ -1,13 +1,128 @@
-import Categories from './Category/Categories';
-import '../../styles.css';
-import './Options.module.css';
+import CategoriesUI from '@/components/CategoriesUI/CategoriesUI';
+import {
+  deleteCategory,
+  editCategory,
+  getCategories,
+  ICategory,
+} from '@/utils/categories';
+import { useCallback, useEffect, useState } from 'react';
+import ConfirmDeleteModalUI from '@/components/ConfirmDeleteModalUI/ConfirmDeleteModalUI';
+import EditScheduleModal from './Category/EditScheduleModal';
+import AddDomainModal from './Category/AddDomainModal';
+import EditCategoryModal from './Category/EditCategoryModal';
+import BlockedSitesHeader from '@/components/BlockedSitesHeader/BlockedSitesHeader';
 
-const Options: React.FC = () => {
+type CategoriesModals =
+  | 'none'
+  | 'edit'
+  | 'addDomain'
+  | 'confirmDelete'
+  | 'editSchedule';
+const Options = () => {
+  const [openModal, setOpenModal] = useState<CategoriesModals>('none');
+  const [categories, setCategories] = useState<ICategory[]>([]);
+  const [categoryToEdit, setCategoryToEdit] = useState<ICategory | null>(null);
+  const [confirmDeleteModalCallback, setConfirmDeleteModalCallback] = useState<
+    () => void
+  >(() => {});
+
+  const fetchCategories = useCallback(async () => {
+    const result = await getCategories();
+    setCategories(result);
+  }, []);
+
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
+
+  const handleDeleteCategory = async (id: string) => {
+    setConfirmDeleteModalCallback(() => async () => {
+      await deleteCategory(id);
+      handleCloseModals();
+    });
+    setOpenModal('confirmDelete');
+  };
+
+  const handleRemoveSite = (categoryId: string, domainToDelete: string) => {
+    const category = categories.find((category) => category.id === categoryId);
+    if (category) {
+      const removeDomainCallback = async () => {
+        await editCategory({
+          ...category,
+          domains: category.domains.filter(
+            (domain) => domain !== domainToDelete
+          ),
+        });
+        handleCloseModals();
+      };
+      setConfirmDeleteModalCallback(() => removeDomainCallback);
+      setOpenModal('confirmDelete');
+    }
+  };
+
+  const handleEditModalOpen = (id: string, modalType: CategoriesModals) => {
+    const category = categories.find((category) => category.id === id);
+    if (!category) {
+      return;
+    }
+    setCategoryToEdit(category);
+    setOpenModal(modalType);
+  };
+
+  const handleToggleEnabled = async (id: string) => {
+    const category = categories.find((category) => category.id === id);
+    if (category) {
+      category.isEnabled = !category.isEnabled;
+      await editCategory(category);
+      fetchCategories();
+    }
+  };
+
+  const handleCloseModals = () => {
+    setOpenModal('none');
+    setConfirmDeleteModalCallback(() => {});
+    setCategoryToEdit(null);
+    fetchCategories();
+  };
+
   return (
-    <div className="p-5 font-sans">
-      <h1 className="text-2xl font-bold mb-4">Manage Blocked Sites</h1>
-      <Categories />
-    </div>
+    <>
+      {categoryToEdit && (
+        <>
+          <AddDomainModal
+            isOpen={openModal === 'addDomain'}
+            category={categoryToEdit}
+            onClose={handleCloseModals}
+          />
+          <EditScheduleModal
+            isOpen={openModal === 'editSchedule'}
+            onClose={handleCloseModals}
+            categoryToEdit={categoryToEdit}
+          />
+        </>
+      )}
+      <EditCategoryModal
+        isOpen={openModal === 'edit'}
+        categoryToEdit={categoryToEdit}
+        onClose={handleCloseModals}
+      />
+      <ConfirmDeleteModalUI
+        isOpen={openModal === 'confirmDelete'}
+        onClose={handleCloseModals}
+        onConfirm={confirmDeleteModalCallback}
+      />
+      <BlockedSitesHeader onAddCategory={() => setOpenModal('edit')} />
+      <CategoriesUI
+        categories={categories}
+        onAddCategory={() => setOpenModal('edit')}
+        onDeleteCategory={handleDeleteCategory}
+        onEditCategory={(id: string) => handleEditModalOpen(id, 'edit')}
+        toggleEnabled={handleToggleEnabled}
+        onAddDomain={(id: string) => handleEditModalOpen(id, 'addDomain')}
+        onRemoveSite={handleRemoveSite}
+        onEditSchedule={(id: string) => handleEditModalOpen(id, 'editSchedule')}
+      />
+    </>
   );
 };
 

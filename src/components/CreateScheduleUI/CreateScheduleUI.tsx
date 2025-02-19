@@ -1,11 +1,11 @@
 import { IoMdRemoveCircleOutline } from 'react-icons/io';
 import BaseSelect from '../BaseSelect/BaseSelect';
+import BaseToggle from '../BaseToggle/BaseToggle';
 import {
   daysOfWeekOptions,
   type DayOfWeek,
   type ISchedule,
-} from '@/utils/categories';
-import BaseToggle from '../BaseToggle/BaseToggle';
+} from '../../utils/categories';
 
 export interface CreateScheduleFormValues {
   schedule: ISchedule;

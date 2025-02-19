@@ -7,6 +7,13 @@ export default defineConfig({
   modules: ['@wxt-dev/module-react'],
   vite: () => ({
     plugins: [react()],
+    server: {
+      port: 3000,
+      strictPort: true,
+      hmr: {
+        port: 3000,
+      },
+    },
   }),
   srcDir: 'src',
   outDir: 'build',
