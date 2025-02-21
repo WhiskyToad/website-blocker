@@ -1,3 +1,5 @@
+import { browser } from 'wxt/browser';
+
 export interface ICategory {
   categoryName: string;
   categoryDescription?: string;
@@ -30,7 +32,7 @@ export async function addCategory(category: ICategory): Promise<void> {
   try {
     const categories = await getCategories();
     categories.push(category);
-    await chrome.storage.local.set({ categories });
+    await browser.storage.local.set({ categories });
   } catch (error) {
     console.error('Failed to add category:', error);
   }
@@ -45,7 +47,7 @@ export async function editCategory(category: ICategory): Promise<void> {
       }
       return cat;
     });
-    await chrome.storage.local.set({ categories: updatedCategories });
+    await browser.storage.local.set({ categories: updatedCategories });
   } catch (error) {
     console.error('Failed to edit category:', error);
   }
@@ -57,7 +59,7 @@ export async function deleteCategory(id: string): Promise<void> {
     const updatedCategories = categories.filter(
       (category) => category.id !== id
     );
-    await chrome.storage.local.set({ categories: updatedCategories });
+    await browser.storage.local.set({ categories: updatedCategories });
   } catch (error) {
     console.error('Failed to delete category:', error);
   }
@@ -65,8 +67,8 @@ export async function deleteCategory(id: string): Promise<void> {
 
 export async function getCategories(): Promise<ICategory[]> {
   try {
-    const { categories } = await chrome.storage.local.get('categories');
-    return categories || [];
+    const { categories } = await browser.storage.local.get('categories');
+    return (categories as ICategory[]) || [];
   } catch (error) {
     console.error('Failed to get categories:', error);
     return [];

@@ -14,7 +14,7 @@ const PopupUi = ({
   return (
     <div className="w-72 p-4 bg-base-100 text-base-content">
       {/* Header */}
-      <h1 className="text-xl font-bold mb-3">Site Blocker</h1>
+      <h1 className="text-xl font-bold mb-3">Block Master</h1>
 
       {/* Link to Options */}
       <button className="btn btn-secondary w-full mb-4" onClick={onOpenOptions}>

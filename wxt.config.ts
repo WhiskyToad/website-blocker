@@ -3,7 +3,6 @@ import react from '@vitejs/plugin-react';
 
 // See https://wxt.dev/api/config.html
 export default defineConfig({
-  extensionApi: 'chrome',
   modules: ['@wxt-dev/module-react'],
   vite: () => ({
     plugins: [react()],
@@ -18,14 +17,22 @@ export default defineConfig({
   srcDir: 'src',
   outDir: 'build',
   manifest: {
-    name: 'Block it out',
+    name: 'Block Master',
     permissions: [
       'declarativeNetRequest',
       'storage',
       'activeTab',
       'alarms',
       'declarativeNetRequestWithHostAccess',
+      'webRequest',
+      'webRequestBlocking',
     ],
     host_permissions: ['<all_urls>'],
+    web_accessible_resources: [
+      {
+        resources: ['/blocked.html'],
+        matches: ['<all_urls>'],
+      },
+    ],
   },
 });

@@ -1,13 +1,14 @@
 import { getActiveDomains } from './categories';
+import { browser, type DeclarativeNetRequest } from 'wxt/browser';
 
 export interface IBlockedSite {
   id: number;
   domain: string;
-  actionType: chrome.declarativeNetRequest.RuleActionType;
+  actionType: DeclarativeNetRequest.RuleActionTypeEnum;
 }
 
-export function transformChromeRuleToIBlockedSite(
-  rule: chrome.declarativeNetRequest.Rule
+export function transformRuleToIBlockedSite(
+  rule: DeclarativeNetRequest.Rule
 ): IBlockedSite {
   return {
     id: rule.id,
@@ -18,53 +19,86 @@ export function transformChromeRuleToIBlockedSite(
 
 export const redirectExtensionPath = '/blocked.html';
 
-function getBlockChromeRule(
-  id: number,
-  domain: string
-): chrome.declarativeNetRequest.Rule {
+// Function to get the block rule for Chrome (Declarative Net Request)
+function getBlockRule(id: number, domain: string): DeclarativeNetRequest.Rule {
   return {
     id,
     action: {
-      type: chrome.declarativeNetRequest.RuleActionType.REDIRECT,
+      type: 'redirect',
       redirect: {
-        extensionPath: `${redirectExtensionPath}?blockedSite=${domain}`,
+        extensionPath: `/blocked.html?blockedSite=${encodeURIComponent(domain)}`,
       },
     },
     condition: {
       urlFilter: domain,
-      resourceTypes: [chrome.declarativeNetRequest.ResourceType.MAIN_FRAME],
+      resourceTypes: ['main_frame'],
     },
   };
 }
 
+// Function to update blocked websites (Works on both Chrome & Firefox)
 const updateBlockedWebsites = async () => {
-  //remove all blocked sites
-  const blockedSites = await getBlockedSites();
-  await chrome.declarativeNetRequest.updateDynamicRules({
-    removeRuleIds: blockedSites.map((site) => site.id),
-  });
-
-  //Get all the active domains and add them to the block list
   const activeDomains = await getActiveDomains();
-  await chrome.declarativeNetRequest.updateDynamicRules({
-    addRules: activeDomains.map((site, index) =>
-      getBlockChromeRule(index + 1, site)
-    ),
-  });
+  if (
+    typeof browser !== 'undefined' &&
+    browser.webRequest &&
+    browser.webRequest.onBeforeRequest
+  ) {
+    // 🦊 Firefox detected → Use webRequest.onBeforeRequest
+    console.log('Using webRequest API for Firefox');
+
+    // Remove any existing listeners to avoid duplication
+    browser.webRequest.onBeforeRequest.removeListener(handleFirefoxRedirect);
+
+    // Add new listener to block sites
+    browser.webRequest.onBeforeRequest.addListener(
+      handleFirefoxRedirect,
+      { urls: ['https://www.bbc.co.uk/'] },
+      ['blocking']
+    );
+  } else if (
+    typeof chrome !== 'undefined' &&
+    chrome.declarativeNetRequest &&
+    chrome.declarativeNetRequest.updateDynamicRules
+  ) {
+    // 🌐 Chrome detected → Use Declarative Net Request (DNR)
+    console.log('Using Declarative Net Request API for Chrome');
+
+    const blockedSites = await getBlockedSites();
+
+    await chrome.declarativeNetRequest.updateDynamicRules({
+      removeRuleIds: blockedSites.map((site) => site.id),
+      addRules: activeDomains.map((site, index) =>
+        getBlockRule(index + 1, site)
+      ),
+    });
+  } else {
+    console.error('No supported blocking API found.');
+  }
 };
 
-export function startScheduleMonitor(): void {
-  updateBlockedWebsites(); // Initial execution
-  chrome.alarms.create('scheduleMonitor', { periodInMinutes: 1 });
+// Function to handle Firefox redirection
+const handleFirefoxRedirect = (details: any) => {
+  console.log('details', details);
+  return {
+    redirectUrl: `${browser.runtime.getURL('/blocked.html')}?blockedSite=${encodeURIComponent(new URL(details.url).hostname)}`,
+  };
+};
 
-  chrome.alarms.onAlarm.addListener((alarm) => {
+// Start the schedule monitor
+export function startScheduleMonitor(): void {
+  updateBlockedWebsites();
+  browser.alarms.create('scheduleMonitor', { periodInMinutes: 1 });
+
+  browser.alarms.onAlarm.addListener((alarm) => {
     if (alarm.name === 'scheduleMonitor') {
       updateBlockedWebsites();
     }
   });
 }
 
+// Get currently blocked sites
 export async function getBlockedSites(): Promise<IBlockedSite[]> {
-  const rules = await chrome.declarativeNetRequest.getDynamicRules();
-  return rules.map(transformChromeRuleToIBlockedSite);
+  const rules = await browser.declarativeNetRequest.getDynamicRules();
+  return rules.map(transformRuleToIBlockedSite);
 }

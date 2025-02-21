@@ -1,4 +1,4 @@
-import { use, useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { browser } from 'wxt/browser';
 import { ICategory, editCategory, getCategories } from '@/utils/categories';
 import PopupUi from '@/components/PopupUi/PopupUi';
