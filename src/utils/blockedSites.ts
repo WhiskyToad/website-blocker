@@ -58,11 +58,13 @@ const updateBlockedWebsites = async () => {
     browser.webRequest.onBeforeRequest.removeListener(handleFirefoxRedirect);
 
     // Add new listener to block sites
-    browser.webRequest.onBeforeRequest.addListener(
-      handleFirefoxRedirect,
-      { urls: ['https://www.bbc.co.uk/'] },
-      ['blocking']
-    );
+    if (activeDomains.length) {
+      browser.webRequest.onBeforeRequest.addListener(
+        handleFirefoxRedirect,
+        { urls: activeDomains.map((site) => `*://*.${site}/*`) },
+        ['blocking']
+      );
+    }
   } else if (
     typeof chrome !== 'undefined' &&
     chrome.declarativeNetRequest &&
