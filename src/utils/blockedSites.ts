@@ -1,5 +1,9 @@
 import { getActiveDomains } from './categories';
-import { browser, type DeclarativeNetRequest } from 'wxt/browser';
+import {
+  browser,
+  type DeclarativeNetRequest,
+  type WebRequest,
+} from 'wxt/browser';
 
 export interface IBlockedSite {
   id: number;
@@ -20,18 +24,21 @@ export function transformRuleToIBlockedSite(
 export const redirectExtensionPath = '/blocked.html';
 
 // Function to get the block rule for Chrome (Declarative Net Request)
-function getBlockRule(id: number, domain: string): DeclarativeNetRequest.Rule {
+function getBlockRule(
+  id: number,
+  domain: string
+): chrome.declarativeNetRequest.Rule {
   return {
     id,
     action: {
-      type: 'redirect',
+      type: chrome.declarativeNetRequest.RuleActionType.REDIRECT,
       redirect: {
         extensionPath: `/blocked.html?blockedSite=${encodeURIComponent(domain)}`,
       },
     },
     condition: {
       urlFilter: domain,
-      resourceTypes: ['main_frame'],
+      resourceTypes: [chrome.declarativeNetRequest.ResourceType.MAIN_FRAME],
     },
   };
 }
@@ -78,9 +85,11 @@ const updateBlockedWebsites = async () => {
 };
 
 // Function to handle Firefox redirection
-const handleFirefoxRedirect = (details: any) => {
-  console.log('details', details);
+const handleFirefoxRedirect = (
+  details: WebRequest.OnBeforeRequestDetailsType
+) => {
   return {
+    //@ts-expect-error - the type is wrong
     redirectUrl: `${browser.runtime.getURL('/blocked.html')}?blockedSite=${encodeURIComponent(new URL(details.url).hostname)}`,
   };
 };
