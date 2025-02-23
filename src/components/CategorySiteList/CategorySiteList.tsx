@@ -21,7 +21,7 @@ const CategorySiteList = ({
               <span className="text-sm truncate">{site}</span>
               <button
                 aria-label={`Remove ${site}`}
-                className="btn btn-error btn-sm flex items-center space-x-1"
+                className="btn btn-error btn-sm flex items-center space-x-1 btn-outline"
                 onClick={() => onRemoveSite(site)}
               >
                 <IoMdRemoveCircleOutline size={16} />

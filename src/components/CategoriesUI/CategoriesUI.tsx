@@ -42,7 +42,7 @@ const CategoriesUI = ({
           <div className="flex justify-between">
             <button
               onClick={() => onEditSchedule(category.id)}
-              className="btn btn-sm btn-info"
+              className="btn btn-sm btn-secondary"
             >
               Schedule
             </button>

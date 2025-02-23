@@ -114,15 +114,19 @@ const Options = () => {
         onClose={handleCloseModals}
         onConfirm={confirmDeleteModalCallback}
       />
-      <BlockedSitesHeader onAddCategory={() => setOpenModal('edit')} />
-      <CategoriesUI
-        categories={categories}
-        onEditCategory={(id: string) => handleEditModalOpen(id, 'edit')}
-        toggleEnabled={handleToggleEnabled}
-        onAddDomain={(id: string) => handleEditModalOpen(id, 'addDomain')}
-        onRemoveSite={handleRemoveSite}
-        onEditSchedule={(id: string) => handleEditModalOpen(id, 'editSchedule')}
-      />
+      <div className="flex flex-col gap-4">
+        <BlockedSitesHeader onAddCategory={() => setOpenModal('edit')} />
+        <CategoriesUI
+          categories={categories}
+          onEditCategory={(id: string) => handleEditModalOpen(id, 'edit')}
+          toggleEnabled={handleToggleEnabled}
+          onAddDomain={(id: string) => handleEditModalOpen(id, 'addDomain')}
+          onRemoveSite={handleRemoveSite}
+          onEditSchedule={(id: string) =>
+            handleEditModalOpen(id, 'editSchedule')
+          }
+        />
+      </div>
     </>
   );
 };

@@ -35,17 +35,11 @@ const BaseModal = ({
         <div className="py-4">{children}</div>
         <div className="modal-action flex justify-between">
           <div>
-            <button
-              className="btn bg-gray-200 hover:bg-gray-300"
-              onClick={onClose}
-            >
+            <button className="btn bg-neutral" onClick={onClose}>
               Close
             </button>
             {showDeleteButton && (
-              <button
-                className="btn btn-error hover:bg-red-600 ml-2"
-                onClick={onDelete}
-              >
+              <button className="btn btn-error  ml-2" onClick={onDelete}>
                 {deleteButtonText}
               </button>
             )}

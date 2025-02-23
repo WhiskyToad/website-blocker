@@ -20,6 +20,8 @@ const defaultProps: BaseModalProps = {
   children: 'Modal Content',
   submitText: 'Submit',
   onSubmit: () => {},
+  showDeleteButton: true,
+  onDelete: () => {},
 };
 
 export const Default: Story = {
