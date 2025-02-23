@@ -18,6 +18,10 @@ export default defineConfig({
   outDir: 'build',
   manifest: {
     name: 'Block Master',
+    description:
+      'Your one stop solution to block unwanted websites and increase your productivity.',
+    version: '1.0.0',
+    manifest_version: 3,
     permissions: [
       'declarativeNetRequest',
       'storage',
