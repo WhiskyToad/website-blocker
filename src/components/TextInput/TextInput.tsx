@@ -1,3 +1,5 @@
+import type React from 'react';
+
 export interface TextInputProps {
   placeholder: string;
   value: string;
@@ -5,6 +7,7 @@ export interface TextInputProps {
   required?: boolean;
   label: string;
   error?: string;
+  type?: React.InputHTMLAttributes<HTMLInputElement>['type'];
 }
 
 const TextInput = ({
@@ -14,6 +17,7 @@ const TextInput = ({
   required = false,
   label,
   error,
+  type = 'text',
 }: TextInputProps) => {
   return (
     <div className="flex flex-col space-y-2">
@@ -22,7 +26,7 @@ const TextInput = ({
           {label} {required && <span className="text-red-500">*</span>}
         </span>
         <input
-          type="text"
+          type={type}
           placeholder={placeholder}
           className={`input input-bordered w-full max-w-xs ${
             error ? 'border-red-500 focus:ring-red-500' : 'focus:ring-primary'
