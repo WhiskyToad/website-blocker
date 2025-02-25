@@ -2,9 +2,11 @@ import { useCallback, useEffect, useState } from 'react';
 import { browser } from 'wxt/browser';
 import { ICategory, editCategory, getCategories } from '@/utils/categories';
 import PopupUi from '@/components/PopupUi/PopupUi';
+import AddDomainToCategory from './AddDomainToCategory';
 
 function Popup() {
   const [categories, setCategories] = useState<ICategory[]>([]);
+  const [showAddDomain, setShowAddDomain] = useState(false);
 
   const fetchCategories = useCallback(async () => {
     const result = await getCategories();
@@ -24,6 +26,20 @@ function Popup() {
       fetchCategories();
     }
   };
+
+  if (showAddDomain) {
+    return (
+      <div className="w-72 p-4 bg-base-100 text-base-content">
+        <button
+          className="btn btn-ghost mb-4"
+          onClick={() => setShowAddDomain(false)}
+        >
+          ← Back
+        </button>
+        <AddDomainToCategory />
+      </div>
+    );
+  }
 
   // Navigate to options page
   const handleOpenOptions = () => {

@@ -98,6 +98,7 @@ const handleFirefoxRedirect = (
 
 // Start the schedule monitor
 export function startScheduleMonitor(): void {
+  console.log('Starting schedule monitor');
   updateBlockedWebsites();
   browser.alarms.create('scheduleMonitor', { periodInMinutes: 1 });
 
