@@ -44,7 +44,7 @@ function getBlockRule(
 }
 
 // Function to update blocked websites (Works on both Chrome & Firefox)
-const updateBlockedWebsites = async () => {
+export const updateBlockedWebsites = async () => {
   const activeDomains = await getActiveDomains();
   if (
     typeof browser !== 'undefined' &&

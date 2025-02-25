@@ -1,4 +1,5 @@
 import { browser } from 'wxt/browser';
+import { getTemporarilyAllowedSites } from './temporarilyAllow';
 
 export interface ICategory {
   categoryName: string;
@@ -104,10 +105,15 @@ export async function getActiveDomains(): Promise<string[]> {
       }
     });
 
-    // Remove duplicate domains
-    activeDomains = [...new Set(activeDomains)];
+    activeDomains = Array.from(new Set(activeDomains)); // Remove duplicates
 
-    console.log('Active domains:', activeDomains);
+    const temporarilyAllowedSites = await getTemporarilyAllowedSites();
+
+    const domainsToBlock = activeDomains.filter((domain) => {
+      return !temporarilyAllowedSites.includes(domain);
+    });
+
+    console.log('Active domains after filtering:', domainsToBlock);
     return activeDomains;
   } catch (error) {
     console.error('Failed to get active domains:', error);

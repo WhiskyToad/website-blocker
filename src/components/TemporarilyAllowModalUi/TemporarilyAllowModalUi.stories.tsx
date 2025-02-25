@@ -23,6 +23,7 @@ const defaultProps: TemporarilyAllowModalUiProps = {
   siteName: 'google.com',
   formValues: {
     minutes: '',
+    customMinutes: '',
   },
 };
 
