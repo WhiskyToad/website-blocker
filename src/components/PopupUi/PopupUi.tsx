@@ -2,24 +2,30 @@ import { ICategory } from '@/utils/categories';
 
 export interface PopupUiProps {
   categories: ICategory[];
-  onToggleCategory: (id: string) => void;
+  onToggleCategory: (categoryId: string) => void;
   onOpenOptions: () => void;
+  onAddDomain: () => void;
 }
 
 const PopupUi = ({
   categories,
   onToggleCategory,
   onOpenOptions,
+  onAddDomain,
 }: PopupUiProps) => {
   return (
     <div className="w-72 p-4 bg-base-100 text-base-content">
       {/* Header */}
       <h1 className="text-xl font-bold mb-3">Block Master</h1>
 
-      {/* Link to Options */}
-      <button className="btn btn-secondary w-full mb-4" onClick={onOpenOptions}>
-        Manage Options
-      </button>
+      <div className="flex gap-2 mb-4">
+        <button className="btn btn-secondary flex-1" onClick={onOpenOptions}>
+          Options
+        </button>
+        <button className="btn btn-primary flex-1" onClick={onAddDomain}>
+          Add Domain
+        </button>
+      </div>
 
       {/* Category List */}
       <ul className="space-y-2">

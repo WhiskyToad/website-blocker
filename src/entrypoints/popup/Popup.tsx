@@ -36,7 +36,7 @@ function Popup() {
         >
           ← Back
         </button>
-        <AddDomainToCategory />
+        <AddDomainToCategory onCancel={() => setShowAddDomain(false)} />
       </div>
     );
   }
@@ -51,6 +51,7 @@ function Popup() {
       categories={categories}
       onOpenOptions={handleOpenOptions}
       onToggleCategory={handleToggleCategory}
+      onAddDomain={() => setShowAddDomain(true)}
     />
   );
 }

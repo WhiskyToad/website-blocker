@@ -51,6 +51,7 @@ const defaultProps: PopupUiProps = {
       },
     },
   ],
+  onAddDomain: () => {},
 };
 
 export const Default: Story = {

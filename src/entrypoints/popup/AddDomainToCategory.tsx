@@ -13,10 +13,12 @@ interface CategoryFormData {
   domain: string;
 }
 
-const AddDomainToCategory = () => {
+const AddDomainToCategory = ({ onCancel }: { onCancel: () => void }) => {
   const [categories, setCategories] = useState<Array<ICategory>>([]);
 
-  const { watch, handleSubmit, setValue } = useForm<CategoryFormData>();
+  const { watch, handleSubmit, setValue } = useForm<CategoryFormData>({
+    defaultValues: { categoryId: '' },
+  });
 
   const onSubmit = async (data: CategoryFormData) => {
     const categoryToUpdate = categories.find(
@@ -31,6 +33,9 @@ const AddDomainToCategory = () => {
     };
 
     await editCategory(updatedCategory);
+    onCancel();
+
+    //TODO - correct the domain and ensure its unique for the category
   };
 
   // Fetch categories on component mount
