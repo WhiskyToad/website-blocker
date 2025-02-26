@@ -3,6 +3,7 @@ export interface AddDomainToCategoryUiProps {
   selectedCategory: string;
   onCategoryChange: (category: string) => void;
   onCancel: () => void;
+  error?: string;
 }
 
 interface CategoryFormData {
@@ -15,23 +16,28 @@ const AddDomainToCategoryUi = ({
   selectedCategory,
   onCategoryChange,
   onCancel,
+  error,
 }: AddDomainToCategoryUiProps) => {
   return (
     <div className="flex flex-col gap-4">
-      <select
-        className="select select-bordered w-full"
-        value={selectedCategory}
-        onChange={(e) => onCategoryChange(e.target.value)}
-      >
-        <option disabled value="">
-          Select a category
-        </option>
-        {categories.map((category) => (
-          <option key={category.categoryId} value={category.categoryId}>
-            {category.name}
+      <div className="form-control w-full">
+        <select
+          className={`select select-bordered w-full ${error ? 'select-error' : ''}`}
+          value={selectedCategory}
+          onChange={(e) => onCategoryChange(e.target.value)}
+          aria-invalid={error ? 'true' : 'false'}
+        >
+          <option disabled value="">
+            Select a category
           </option>
-        ))}
-      </select>
+          {categories.map((category) => (
+            <option key={category.categoryId} value={category.categoryId}>
+              {category.name}
+            </option>
+          ))}
+        </select>
+        {error && <div className="text-error text-sm mt-1">{error}</div>}
+      </div>
       <div className="flex justify-end gap-2">
         <button className="btn btn-ghost" onClick={onCancel}>
           Cancel

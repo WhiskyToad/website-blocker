@@ -16,7 +16,13 @@ interface CategoryFormData {
 const AddDomainToCategory = ({ onCancel }: { onCancel: () => void }) => {
   const [categories, setCategories] = useState<Array<ICategory>>([]);
 
-  const { watch, handleSubmit, setValue } = useForm<CategoryFormData>({
+  const {
+    watch,
+    handleSubmit,
+    setValue,
+    setError,
+    formState: { errors },
+  } = useForm<CategoryFormData>({
     defaultValues: { categoryId: '' },
   });
 
@@ -27,6 +33,14 @@ const AddDomainToCategory = ({ onCancel }: { onCancel: () => void }) => {
     const currentDomain = await getCurrentTabDomain();
     if (!categoryToUpdate || !currentDomain) return;
 
+    if (categoryToUpdate.domains?.includes(currentDomain)) {
+      setError('categoryId', {
+        type: 'manual',
+        message: 'Domain already exists in this category.',
+      });
+      return;
+    }
+
     const updatedCategory = {
       ...categoryToUpdate,
       domains: [...(categoryToUpdate.domains || []), currentDomain],
@@ -34,8 +48,6 @@ const AddDomainToCategory = ({ onCancel }: { onCancel: () => void }) => {
 
     await editCategory(updatedCategory);
     onCancel();
-
-    //TODO - correct the domain and ensure its unique for the category
   };
 
   // Fetch categories on component mount
@@ -62,6 +74,7 @@ const AddDomainToCategory = ({ onCancel }: { onCancel: () => void }) => {
         selectedCategory={watch('categoryId')}
         onCategoryChange={(category) => setValue('categoryId', category)}
         onCancel={() => {}}
+        error={errors.categoryId?.message}
       />
     </form>
   );

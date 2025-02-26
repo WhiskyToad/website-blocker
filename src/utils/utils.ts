@@ -10,7 +10,7 @@ export async function getCurrentTabDomain(): Promise<string | null> {
 
   try {
     const url = new URL(tabs[0].url);
-    return url.hostname; // Extracts "example.com" from "https://example.com/page"
+    return url.hostname.replace(/^www\./, ''); // Removes 'www.' prefix if it exists
   } catch (error) {
     console.error('Invalid URL:', error);
     return null;
