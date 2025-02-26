@@ -2,7 +2,6 @@ export interface AddDomainToCategoryUiProps {
   categories: CategoryFormData[];
   selectedCategory: string;
   onCategoryChange: (category: string) => void;
-  onCancel: () => void;
   error?: string;
 }
 
@@ -15,7 +14,6 @@ const AddDomainToCategoryUi = ({
   categories,
   selectedCategory,
   onCategoryChange,
-  onCancel,
   error,
 }: AddDomainToCategoryUiProps) => {
   return (
@@ -39,9 +37,6 @@ const AddDomainToCategoryUi = ({
         {error && <div className="text-error text-sm mt-1">{error}</div>}
       </div>
       <div className="flex justify-end gap-2">
-        <button className="btn btn-ghost" onClick={onCancel}>
-          Cancel
-        </button>
         <button className="btn btn-primary" type="submit">
           OK
         </button>

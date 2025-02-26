@@ -73,7 +73,6 @@ const AddDomainToCategory = ({ onCancel }: { onCancel: () => void }) => {
         }))}
         selectedCategory={watch('categoryId')}
         onCategoryChange={(category) => setValue('categoryId', category)}
-        onCancel={() => {}}
         error={errors.categoryId?.message}
       />
     </form>
