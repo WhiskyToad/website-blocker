@@ -90,9 +90,11 @@ export const updateBlockedWebsites = async () => {
 const handleFirefoxRedirect = (
   details: WebRequest.OnBeforeRequestDetailsType
 ) => {
+  const url = new URL(details.url);
+  const domain = url.hostname.split('.').slice(-2).join('.');
   return {
     //@ts-expect-error - the type is wrong
-    redirectUrl: `${browser.runtime.getURL('/blocked.html')}?blockedSite=${encodeURIComponent(new URL(details.url).hostname)}`,
+    redirectUrl: `${browser.runtime.getURL('/blocked.html')}?blockedSite=${encodeURIComponent(domain)}`,
   };
 };
 

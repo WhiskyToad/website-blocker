@@ -7,14 +7,14 @@ import { saveTemporarilyAllowedSite } from '@/utils/temporarilyAllow';
 interface TemporarilyAllowModalProps {
   isOpen: boolean;
   onClose: () => void;
-  siteName: string;
 }
 
 export const TemporarilyAllowModal = ({
   isOpen,
   onClose,
-  siteName,
 }: TemporarilyAllowModalProps) => {
+  const searchParams = new URLSearchParams(location.search);
+  const blockedSite = searchParams.get('blockedSite');
   const {
     setValue,
     handleSubmit,
@@ -42,17 +42,17 @@ export const TemporarilyAllowModal = ({
 
   const onFormSubmit = async (data: TemporarilyAllowModalFormValues) => {
     await saveTemporarilyAllowedSite(
-      siteName,
+      blockedSite ?? '',
       Number(data.minutes || data.customMinutes)
     );
     onClose();
-    window.location.href = siteName;
+    window.location.href = blockedSite ?? '';
   };
 
   return (
     <form onSubmit={handleSubmit(onFormSubmit)}>
       <TemporarilyAllowModalUi
-        siteName={siteName}
+        siteName={blockedSite ?? ''}
         isOpen={isOpen}
         onClose={onClose}
         onChange={handleValueChange}
