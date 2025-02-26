@@ -11,6 +11,9 @@ export interface IBlockedSite {
   actionType: DeclarativeNetRequest.RuleActionTypeEnum;
 }
 
+/*
+// Chrome implementation
+*/
 export function transformRuleToIBlockedSite(
   rule: DeclarativeNetRequest.Rule
 ): IBlockedSite {
@@ -22,71 +25,56 @@ export function transformRuleToIBlockedSite(
 }
 
 export const redirectExtensionPath = '/blocked.html';
+// Chrome implementation
+function updateChromeBlockedSites(activeDomains: string[]) {
+  if (!chrome.declarativeNetRequest?.updateDynamicRules) {
+    console.error('Chrome DNR API not available');
+    return;
+  }
 
-// Function to get the block rule for Chrome (Declarative Net Request)
-function getBlockRule(
-  id: number,
-  domain: string
-): chrome.declarativeNetRequest.Rule {
-  return {
-    id,
-    action: {
-      type: chrome.declarativeNetRequest.RuleActionType.REDIRECT,
-      redirect: {
-        extensionPath: `/blocked.html?blockedSite=${encodeURIComponent(domain)}`,
+  return chrome.declarativeNetRequest.updateDynamicRules({
+    removeRuleIds: Array.from(
+      { length: activeDomains.length },
+      (_, i) => i + 1
+    ),
+    addRules: activeDomains.map((site, index) => ({
+      id: index + 1,
+      action: {
+        type: chrome.declarativeNetRequest.RuleActionType.REDIRECT,
+        redirect: {
+          extensionPath: `/blocked.html?blockedSite=${encodeURIComponent(site)}`,
+        },
       },
-    },
-    condition: {
-      urlFilter: domain,
-      resourceTypes: [chrome.declarativeNetRequest.ResourceType.MAIN_FRAME],
-    },
-  };
+      condition: {
+        urlFilter: site,
+        resourceTypes: [chrome.declarativeNetRequest.ResourceType.MAIN_FRAME],
+      },
+    })),
+  });
 }
 
-// Function to update blocked websites (Works on both Chrome & Firefox)
-export const updateBlockedWebsites = async () => {
-  const activeDomains = await getActiveDomains();
-  if (
-    typeof browser !== 'undefined' &&
-    browser.webRequest &&
-    browser.webRequest.onBeforeRequest
-  ) {
-    // 🦊 Firefox detected → Use webRequest.onBeforeRequest
-    console.log('Using webRequest API for Firefox');
-
-    // Remove any existing listeners to avoid duplication
-    browser.webRequest.onBeforeRequest.removeListener(handleFirefoxRedirect);
-
-    // Add new listener to block sites
-    if (activeDomains.length) {
-      browser.webRequest.onBeforeRequest.addListener(
-        handleFirefoxRedirect,
-        { urls: activeDomains.map((site) => `*://*.${site}/*`) },
-        ['blocking']
-      );
-    }
-  } else if (
-    typeof chrome !== 'undefined' &&
-    chrome.declarativeNetRequest &&
-    chrome.declarativeNetRequest.updateDynamicRules
-  ) {
-    // 🌐 Chrome detected → Use Declarative Net Request (DNR)
-    console.log('Using Declarative Net Request API for Chrome');
-
-    const blockedSites = await getBlockedSites();
-
-    await chrome.declarativeNetRequest.updateDynamicRules({
-      removeRuleIds: blockedSites.map((site) => site.id),
-      addRules: activeDomains.map((site, index) =>
-        getBlockRule(index + 1, site)
-      ),
-    });
-  } else {
-    console.error('No supported blocking API found.');
+/**
+ * Firefox implementation
+ * Firefox does not support the Chrome Declarative Net Request API, so we need to use the WebRequest API
+ * This API is more powerful, but also more complex
+ *  */
+function updateFirefoxBlockedSites(activeDomains: string[]) {
+  if (!browser.webRequest?.onBeforeRequest) {
+    console.error('Firefox webRequest API not available');
+    return;
   }
-};
 
-// Function to handle Firefox redirection
+  browser.webRequest.onBeforeRequest.removeListener(handleFirefoxRedirect);
+
+  if (activeDomains.length) {
+    browser.webRequest.onBeforeRequest.addListener(
+      handleFirefoxRedirect,
+      { urls: activeDomains.map((site) => `*://*.${site}/*`) },
+      ['blocking']
+    );
+  }
+}
+// Helper function for Firefox redirects
 const handleFirefoxRedirect = (
   details: WebRequest.OnBeforeRequestDetailsType
 ) => {
@@ -98,7 +86,25 @@ const handleFirefoxRedirect = (
   };
 };
 
-// Start the schedule monitor
+// Controller function
+export const updateBlockedWebsites = async () => {
+  const activeDomains = await getActiveDomains();
+
+  if (typeof chrome !== 'undefined' && chrome.declarativeNetRequest) {
+    console.log('Using Chrome DNR API');
+    await updateChromeBlockedSites(activeDomains);
+  } else if (typeof browser !== 'undefined' && browser.webRequest) {
+    console.log('Using Firefox WebRequest API');
+    updateFirefoxBlockedSites(activeDomains);
+  } else {
+    console.error('No supported blocking API found');
+  }
+};
+
+/**
+ * Helper functions to start the schedule monitor
+ * This function is called from the background script
+ */
 export function startScheduleMonitor(): void {
   console.log('Starting schedule monitor');
   updateBlockedWebsites();
