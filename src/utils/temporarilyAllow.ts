@@ -1,5 +1,6 @@
 import { browser } from 'wxt/browser';
 import { updateBlockedWebsites } from './blockedSites';
+import { restartScheduleMonitor } from './utils';
 
 const TEMP_ALLOW_KEY = 'temporarilyAllowedSites';
 
@@ -25,11 +26,8 @@ export const saveTemporarilyAllowedSite = async (
   const updatedSites = [...existingSites, newEntry];
   await browser.storage.local.set({ [TEMP_ALLOW_KEY]: updatedSites });
 
-  // Force update the schedule monitor
-  await browser.alarms.clear('scheduleMonitor');
-  await browser.alarms.create('scheduleMonitor', { periodInMinutes: 1 });
   await updateBlockedWebsites();
-
+  await restartScheduleMonitor();
   console.log(`Temporarily allowed ${domain} for ${minutes} minutes.`);
 };
 

@@ -1,4 +1,5 @@
 import { browser } from 'wxt/browser';
+import { updateBlockedWebsites } from './blockedSites';
 
 export async function getCurrentTabDomain(): Promise<string | null> {
   const tabs = await browser.tabs.query({ active: true, currentWindow: true });
@@ -15,4 +16,9 @@ export async function getCurrentTabDomain(): Promise<string | null> {
     console.error('Invalid URL:', error);
     return null;
   }
+}
+export async function restartScheduleMonitor() {
+  await browser.alarms.clear('scheduleMonitor');
+  await browser.alarms.create('scheduleMonitor', { periodInMinutes: 1 });
+  await updateBlockedWebsites();
 }

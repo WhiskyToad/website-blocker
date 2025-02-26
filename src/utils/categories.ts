@@ -1,5 +1,6 @@
 import { browser } from 'wxt/browser';
 import { getTemporarilyAllowedSites } from './temporarilyAllow';
+import { restartScheduleMonitor } from './utils';
 
 export interface ICategory {
   categoryName: string;
@@ -49,6 +50,8 @@ export async function editCategory(category: ICategory): Promise<void> {
       return cat;
     });
     await browser.storage.local.set({ categories: updatedCategories });
+    // Force update the schedule monitor
+    await restartScheduleMonitor();
   } catch (error) {
     console.error('Failed to edit category:', error);
   }
