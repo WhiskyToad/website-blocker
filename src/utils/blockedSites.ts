@@ -58,44 +58,80 @@ function updateChromeBlockedSites(activeDomains: string[]) {
  * Firefox does not support the Chrome Declarative Net Request API, so we need to use the WebRequest API
  * This API is more powerful, but also more complex
  *  */
-function updateFirefoxBlockedSites(activeDomains: string[]) {
+
+// Function to send message to update Firefox blocked sites
+export function updateFirefoxBlockedSites(activeDomains: string[]) {
+  if (!browser.runtime?.sendMessage) {
+    console.error('⚠️ Firefox runtime API not available');
+    return;
+  }
+  console.log(
+    '🔄 Sending message to update Firefox blocked sites:',
+    activeDomains
+  );
+  return browser.runtime.sendMessage({
+    type: 'UPDATE_FIREFOX_BLOCKED_SITES',
+    domains: activeDomains,
+  });
+}
+
+// Message handler function for the background script
+export function handleFirefoxBlockedSitesMessage(message: {
+  type: string;
+  domains: string[];
+}) {
+  if (message.type !== 'UPDATE_FIREFOX_BLOCKED_SITES') return;
   if (!browser.webRequest?.onBeforeRequest) {
-    console.error('Firefox webRequest API not available');
+    console.error('⚠️ Firefox webRequest API not available');
     return;
   }
 
+  console.log('🔄 Updating Firefox blocked sites:', message.domains);
+  console.log(
+    browser.webRequest.onBeforeRequest.hasListener(handleFirefoxRedirect),
+    'hasListener before remove'
+  );
+
+  // Remove existing listener if active
   browser.webRequest.onBeforeRequest.removeListener(handleFirefoxRedirect);
 
-  if (activeDomains.length) {
+  // Add new listener if there are active domains to block
+  if (message.domains.length > 0) {
     browser.webRequest.onBeforeRequest.addListener(
       handleFirefoxRedirect,
-      { urls: activeDomains.map((site) => `*://*.${site}/*`) },
+      { urls: message.domains.map((site) => `*://*.${site}/*`) },
       ['blocking']
     );
+    console.log('✅ Added new listener for domains:', message.domains);
   }
 }
-// Helper function for Firefox redirects
-const handleFirefoxRedirect = (
-  details: WebRequest.OnBeforeRequestDetailsType
-) => {
-  const url = new URL(details.url);
-  const domain = url.hostname.split('.').slice(-2).join('.');
-  return {
-    //@ts-expect-error - the type is wrong
-    redirectUrl: `${browser.runtime.getURL('/blocked.html')}?blockedSite=${encodeURIComponent(domain)}`,
-  };
-};
+
+function handleFirefoxRedirect(details: WebRequest.OnBeforeRequestDetailsType) {
+  try {
+    const url = new URL(details.url);
+    const domainParts = url.hostname.split('.');
+    const domain = domainParts.slice(-2).join('.'); // Extract base domain (e.g., example.com)
+
+    //@ts-expect-error - wrong type
+    const redirectUrl = `${browser.runtime.getURL('/blocked.html')}?blockedSite=${encodeURIComponent(domain)}`;
+    console.log(`🔀 Redirecting ${url.hostname} → ${redirectUrl}`);
+    return { redirectUrl };
+  } catch (error) {
+    console.error('❌ Error handling redirect:', error);
+    return {};
+  }
+}
 
 // Controller function
 export const updateBlockedWebsites = async () => {
   const activeDomains = await getActiveDomains();
-
-  if (typeof chrome !== 'undefined' && chrome.declarativeNetRequest) {
-    console.log('Using Chrome DNR API');
-    await updateChromeBlockedSites(activeDomains);
-  } else if (typeof browser !== 'undefined' && browser.webRequest) {
+  console.log('activeDomains const', activeDomains);
+  if (typeof browser !== 'undefined' && browser.webRequest) {
     console.log('Using Firefox WebRequest API');
     updateFirefoxBlockedSites(activeDomains);
+  } else if (typeof chrome !== 'undefined' && chrome.declarativeNetRequest) {
+    console.log('Using Chrome DNR API');
+    await updateChromeBlockedSites(activeDomains);
   } else {
     console.error('No supported blocking API found');
   }

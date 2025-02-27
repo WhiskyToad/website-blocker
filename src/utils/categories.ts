@@ -115,9 +115,7 @@ export async function getActiveDomains(): Promise<string[]> {
     const domainsToBlock = activeDomains.filter((domain) => {
       return !temporarilyAllowedSites.includes(domain);
     });
-
-    console.log('Active domains after filtering:', domainsToBlock);
-    return activeDomains;
+    return domainsToBlock;
   } catch (error) {
     console.error('Failed to get active domains:', error);
     return [];
