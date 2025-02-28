@@ -1,3 +1,4 @@
+import { useFocusOnOpen } from '@/utils/useFocusOnOpen';
 import BaseModal from '../BaseModal/BaseModal';
 import TextInput from '../TextInput/TextInput';
 
@@ -20,6 +21,7 @@ const AddDomainModalUI = ({
   getErrors,
   formValues,
 }: AddDomainModalUIProps) => {
+  const ref = useFocusOnOpen<HTMLInputElement>(isOpen);
   return (
     <BaseModal
       title="Add Domain"
@@ -36,6 +38,7 @@ const AddDomainModalUI = ({
           required
           label="Domain"
           error={getErrors('domainName')}
+          ref={ref}
         />
       </div>
     </BaseModal>

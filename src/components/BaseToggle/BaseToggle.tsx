@@ -3,6 +3,7 @@ export interface BaseToggleProps {
   label: string;
   onClick: (v: boolean) => void;
   hideLabel?: boolean; // New optional prop
+  ref?: React.Ref<HTMLInputElement>;
 }
 
 const BaseToggle = ({
@@ -10,6 +11,7 @@ const BaseToggle = ({
   label,
   onClick,
   hideLabel = false,
+  ref,
 }: BaseToggleProps) => {
   return (
     <div className="form-control">
@@ -18,6 +20,7 @@ const BaseToggle = ({
           {label}
         </span>
         <input
+          ref={ref}
           type="checkbox"
           className="toggle toggle-primary"
           checked={checked}

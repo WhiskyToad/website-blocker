@@ -8,6 +8,7 @@ export interface TextInputProps {
   label: string;
   error?: string;
   type?: React.InputHTMLAttributes<HTMLInputElement>['type'];
+  ref?: React.Ref<HTMLInputElement>;
 }
 
 const TextInput = ({
@@ -18,6 +19,7 @@ const TextInput = ({
   label,
   error,
   type = 'text',
+  ref,
 }: TextInputProps) => {
   return (
     <div className="flex flex-col space-y-2">
@@ -26,6 +28,7 @@ const TextInput = ({
           {label} {required && <span className="text-red-500">*</span>}
         </span>
         <input
+          ref={ref}
           type={type}
           placeholder={placeholder}
           className={`input input-bordered w-full max-w-xs ${

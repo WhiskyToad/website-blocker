@@ -3,6 +3,7 @@ import BaseModal from '../BaseModal/BaseModal';
 import CreateScheduleUI from '../CreateScheduleUI/CreateScheduleUI';
 import TextAreaInput from '../TextAreaInput/TextAreaInput';
 import TextInput from '../TextInput/TextInput';
+import { useFocusOnOpen } from '@/utils/useFocusOnOpen';
 
 export interface EditCategoryModalFormValues {
   categoryName: string;
@@ -36,6 +37,7 @@ const EditCategoryModal = ({
   isEdit,
   onDelete,
 }: EditCategoryModalProps) => {
+  const ref = useFocusOnOpen<HTMLInputElement>(isOpen);
   return (
     <form onSubmit={onSubmit}>
       <BaseModal
@@ -50,6 +52,7 @@ const EditCategoryModal = ({
         <div className="flex flex-col gap-4">
           <div className="space-y-4">
             <TextInput
+              ref={ref}
               placeholder="Enter category name"
               value={formValues.categoryName}
               onChange={(value) => onChange('categoryName', value)}

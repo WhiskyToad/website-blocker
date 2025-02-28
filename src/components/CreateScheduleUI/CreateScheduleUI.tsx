@@ -6,6 +6,7 @@ import {
   type DayOfWeek,
   type ISchedule,
 } from '../../utils/categories';
+import { useFocusOnOpen } from '@/utils/useFocusOnOpen';
 
 export interface CreateScheduleFormValues {
   schedule: ISchedule;
@@ -23,6 +24,7 @@ export const TIME_OPTIONS = Array.from({ length: 24 * 4 }, (_, i) => {
 
 const CreateScheduleUI = ({ formValues, onChange }: CreateScheduleUIProps) => {
   const { days: selectedDays, intervals: timeIntervals } = formValues.schedule;
+  const ref = useFocusOnOpen<HTMLInputElement>(true);
 
   const toggleDay = (selectedDay: DayOfWeek) => {
     const updatedDays = selectedDays.includes(selectedDay)
@@ -74,6 +76,7 @@ const CreateScheduleUI = ({ formValues, onChange }: CreateScheduleUIProps) => {
           checked={formValues.schedule.alwaysOn}
           label={'Always enabled?'}
           onClick={handleAlwaysOnToggle}
+          ref={ref}
         />
         <p className="text-md font-semibold">Set Times</p>
         {timeIntervals.map((interval, index) => (
