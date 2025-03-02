@@ -7,11 +7,13 @@ import { saveTemporarilyAllowedSite } from '@/utils/temporarilyAllow';
 interface TemporarilyAllowModalProps {
   isOpen: boolean;
   onClose: () => void;
+  setSiteIsUnblocked: (isUnblocked: boolean) => void;
 }
 
 export const TemporarilyAllowModal = ({
   isOpen,
   onClose,
+  setSiteIsUnblocked,
 }: TemporarilyAllowModalProps) => {
   const searchParams = new URLSearchParams(location.search);
   const blockedSite = searchParams.get('blockedSite');
@@ -45,8 +47,8 @@ export const TemporarilyAllowModal = ({
       blockedSite ?? '',
       Number(data.minutes || data.customMinutes)
     );
+    setSiteIsUnblocked(true);
     onClose();
-    window.location.href = blockedSite ?? '';
   };
 
   return (
