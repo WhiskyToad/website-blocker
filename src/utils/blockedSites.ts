@@ -1,9 +1,9 @@
-import { getActiveDomains } from './categories';
 import {
-  browser,
-  type DeclarativeNetRequest,
-  type WebRequest,
-} from 'wxt/browser';
+  handleFirefoxRedirect,
+  updateFirefoxBlockedSites,
+} from '@/entrypoints/background';
+import { getActiveDomains } from './categories';
+import { browser, type DeclarativeNetRequest } from 'wxt/browser';
 
 export interface IBlockedSite {
   id: number;
@@ -60,65 +60,30 @@ function updateChromeBlockedSites(activeDomains: string[]) {
  *  */
 
 // Function to send message to update Firefox blocked sites
-export function updateFirefoxBlockedSites(activeDomains: string[]) {
-  if (!browser.runtime?.sendMessage) {
-    console.error('⚠️ Firefox runtime API not available');
-    return;
-  }
-  console.log(
-    '🔄 Sending message to update Firefox blocked sites:',
-    activeDomains
-  );
-  return browser.runtime.sendMessage({
-    type: 'UPDATE_FIREFOX_BLOCKED_SITES',
-    domains: activeDomains,
-  });
-}
 
 // Message handler function for the background script
-export function handleFirefoxBlockedSitesMessage(message: {
-  type: string;
-  domains: string[];
-}) {
-  if (message.type !== 'UPDATE_FIREFOX_BLOCKED_SITES') return;
+export function handleFirefoxBlockedSitesMessage(domains: string[]) {
   if (!browser.webRequest?.onBeforeRequest) {
     console.error('⚠️ Firefox webRequest API not available');
     return;
   }
 
-  console.log('🔄 Updating Firefox blocked sites:', message.domains);
+  console.log('🔄 Updating Firefox blocked sites:', domains);
+
   console.log(
     browser.webRequest.onBeforeRequest.hasListener(handleFirefoxRedirect),
     'hasListener before remove'
   );
-
-  // Remove existing listener if active
   browser.webRequest.onBeforeRequest.removeListener(handleFirefoxRedirect);
 
   // Add new listener if there are active domains to block
-  if (message.domains.length > 0) {
+  if (domains.length > 0) {
     browser.webRequest.onBeforeRequest.addListener(
       handleFirefoxRedirect,
-      { urls: message.domains.map((site) => `*://*.${site}/*`) },
+      { urls: domains.map((site) => `*://*.${site}/*`) },
       ['blocking']
     );
-    console.log('✅ Added new listener for domains:', message.domains);
-  }
-}
-
-function handleFirefoxRedirect(details: WebRequest.OnBeforeRequestDetailsType) {
-  try {
-    const url = new URL(details.url);
-    const domainParts = url.hostname.split('.');
-    const domain = domainParts.slice(-2).join('.'); // Extract base domain (e.g., example.com)
-
-    //@ts-expect-error - wrong type
-    const redirectUrl = `${browser.runtime.getURL('/blocked.html')}?blockedSite=${encodeURIComponent(domain)}`;
-    console.log(`🔀 Redirecting ${url.hostname} → ${redirectUrl}`);
-    return { redirectUrl };
-  } catch (error) {
-    console.error('❌ Error handling redirect:', error);
-    return {};
+    console.log('✅ Added new listener for domains:', domains);
   }
 }
 
