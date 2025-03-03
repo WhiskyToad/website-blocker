@@ -19,6 +19,6 @@ export async function getCurrentTabDomain(): Promise<string | null> {
 }
 export async function restartScheduleMonitor() {
   await browser.alarms.clear('scheduleMonitor');
-  await browser.alarms.create('scheduleMonitor', { periodInMinutes: 1 });
+  await browser.alarms.create('scheduleMonitor', { periodInMinutes: 0.5 });
   await updateBlockedWebsites();
 }

@@ -36,20 +36,15 @@ export function handleFirefoxRedirect(
   }
 }
 
-browser.alarms.create('keep-loaded-alarm-0', {
-  periodInMinutes: 1,
+// Create a persistent alarm to keep the service worker alive
+browser.alarms.create('keep-alive', {
+  periodInMinutes: 0.3,
+  when: Date.now(),
 });
-setTimeout(
-  () =>
-    browser.alarms.create('keep-loaded-alarm-1', {
-      periodInMinutes: 1,
-    }),
-  20000
-);
-setTimeout(
-  () =>
-    browser.alarms.create('keep-loaded-alarm-2', {
-      periodInMinutes: 1,
-    }),
-  40000
-);
+
+browser.alarms.onAlarm.addListener((alarm) => {
+  if (alarm.name === 'keep-alive') {
+    // Perform a minimal task to keep the service worker active
+    console.log('Service worker is alive:', new Date().toISOString());
+  }
+});

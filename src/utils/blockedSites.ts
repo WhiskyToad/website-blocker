@@ -109,7 +109,7 @@ export const updateBlockedWebsites = async () => {
 export function startScheduleMonitor(): void {
   console.log('Starting schedule monitor');
   updateBlockedWebsites();
-  browser.alarms.create('scheduleMonitor', { periodInMinutes: 1 });
+  browser.alarms.create('scheduleMonitor', { periodInMinutes: 0.5 });
 
   browser.alarms.onAlarm.addListener((alarm) => {
     if (alarm.name === 'scheduleMonitor') {
