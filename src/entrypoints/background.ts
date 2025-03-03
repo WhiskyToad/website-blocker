@@ -14,8 +14,20 @@ export default defineBackground(() => {
     startScheduleMonitor();
   });
 
-  //@ts-expect-error - cba typing
-  browser.runtime.onMessage.addListener(handleFirefoxBlockedSitesMessage);
+  browser.runtime.onMessage.addListener(
+    async (message, _sender, sendResponse) => {
+      console.log('Received message:', message);
+
+      //@ts-expect-error - wrong type
+      const response = await handleFirefoxBlockedSitesMessage(message);
+
+      // Ensure a response is sent
+      sendResponse(response);
+
+      // Returning true keeps the message channel open for async handling
+      return true;
+    }
+  );
 });
 
 browser.alarms.create('keep-loaded-alarm-0', {
