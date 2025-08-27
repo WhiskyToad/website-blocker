@@ -111,10 +111,12 @@ export async function getActiveDomains(): Promise<string[]> {
     activeDomains = Array.from(new Set(activeDomains)); // Remove duplicates
 
     const temporarilyAllowedSites = await getTemporarilyAllowedSites();
+    console.log('Temporarily allowed sites:', temporarilyAllowedSites);
 
     const domainsToBlock = activeDomains.filter((domain) => {
       return !temporarilyAllowedSites.includes(domain);
     });
+    console.log('Domains to block after filtering:', domainsToBlock);
     return domainsToBlock;
   } catch (error) {
     console.error('Failed to get active domains:', error);

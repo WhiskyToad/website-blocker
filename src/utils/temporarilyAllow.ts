@@ -1,6 +1,5 @@
 import { browser } from 'wxt/browser';
 import { updateBlockedWebsites } from './blockedSites';
-import { restartScheduleMonitor } from './utils';
 
 const TEMP_ALLOW_KEY = 'temporarilyAllowedSites';
 
@@ -27,7 +26,6 @@ export const saveTemporarilyAllowedSite = async (
   await browser.storage.local.set({ [TEMP_ALLOW_KEY]: updatedSites });
 
   await updateBlockedWebsites();
-  await restartScheduleMonitor();
   console.log(`Temporarily allowed ${domain} for ${minutes} minutes.`);
 };
 
@@ -41,6 +39,18 @@ export const getTemporarilyAllowedSites = async (): Promise<string[]> => {
 
 // Remove expired entries (can be run periodically)
 export const cleanExpiredTemporarilyAllowedSites = async () => {
-  // Remove all entries
-  await browser.storage.local.remove(TEMP_ALLOW_KEY);
+  const storedData = await browser.storage.local.get(TEMP_ALLOW_KEY);
+  const sites = (storedData[TEMP_ALLOW_KEY] as TemporarilyAllowedSite[]) || [];
+  const now = Date.now();
+  
+  // Filter out expired entries
+  const validSites = sites.filter((site) => site.expiry > now);
+  
+  // Save back the valid entries
+  await browser.storage.local.set({ [TEMP_ALLOW_KEY]: validSites });
+  
+  // If there were expired entries, update the blocking rules
+  if (sites.length !== validSites.length) {
+    await updateBlockedWebsites();
+  }
 };

@@ -49,6 +49,14 @@ export const TemporarilyAllowModal = ({
     );
     setSiteIsUnblocked(true);
     onClose();
+    
+    // Redirect to the original site after a brief delay
+    setTimeout(() => {
+      if (blockedSite) {
+        // Redirect to the unblocked site
+        window.location.href = `https://${blockedSite}`;
+      }
+    }, 1500);
   };
 
   return (

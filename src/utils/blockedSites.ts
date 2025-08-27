@@ -3,6 +3,7 @@ import {
   updateFirefoxBlockedSites,
 } from '@/entrypoints/background';
 import { getActiveDomains } from './categories';
+import { cleanExpiredTemporarilyAllowedSites } from './temporarilyAllow';
 import { browser, type DeclarativeNetRequest } from 'wxt/browser';
 
 export interface IBlockedSite {
@@ -89,6 +90,9 @@ export function handleFirefoxBlockedSitesMessage(domains: string[]) {
 
 // Controller function
 export const updateBlockedWebsites = async () => {
+  // First clean up expired temporary allows
+  await cleanExpiredTemporarilyAllowedSites();
+  
   const activeDomains = await getActiveDomains();
   console.log('activeDomains const', activeDomains);
   if (typeof browser !== 'undefined' && browser.webRequest) {
